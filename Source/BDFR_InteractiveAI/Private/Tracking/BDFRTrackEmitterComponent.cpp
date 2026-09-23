@@ -135,10 +135,29 @@ void UBDFRTrackEmitterComponent::AddSample(
     Sample.SurfaceType = SurfaceType;
     Sample.SourceActor = Owner;
     Sample.Location = Owner->GetActorLocation();
+
+    if (TrackType == EBDFRTrackType::Footprint)
+    {
+        FHitResult GroundHit;
+        FCollisionQueryParams Params(SCENE_QUERY_STAT(BDFRFootprintGround), false, Owner);
+        const FVector TraceStart = Owner->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
+        const FVector TraceEnd = Owner->GetActorLocation() - FVector(0.0f, 0.0f, 180.0f);
+
+        if (World->LineTraceSingleByChannel(
+            GroundHit,
+            TraceStart,
+            TraceEnd,
+            ECC_Visibility,
+            Params))
+        {
+            Sample.Location = GroundHit.ImpactPoint + GroundHit.ImpactNormal * 1.0f;
+        }
+    }
     Sample.Direction = Owner->GetActorForwardVector();
     Sample.TimeSeconds = World->GetTimeSeconds();
     Sample.Strength = Strength;
     Sample.Sequence = Sequence;
 
     Subsystem->AddTrackSample(Sample);
+    OnTrackSampleEmitted.Broadcast(Sample);
 }
