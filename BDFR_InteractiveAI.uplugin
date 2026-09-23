@@ -1,0 +1,19 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.1.0",
+  "FriendlyName": "BDFR Interactive AI",
+  "Description": "Reusable tactical and interactive AI framework for Unreal Engine.",
+  "Category": "Artificial Intelligence",
+  "CreatedBy": "BDFR",
+  "CanContainContent": true,
+  "IsBetaVersion": true,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "BDFR_InteractiveAI",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}
