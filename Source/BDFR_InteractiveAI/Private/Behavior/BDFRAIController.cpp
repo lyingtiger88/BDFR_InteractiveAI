@@ -2,6 +2,7 @@
 
 #include "Awareness/BDFRAwarenessComponent.h"
 #include "Core/BDFRAISettings.h"
+#include "Social/BDFRStressComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense.h"
 #include "Perception/AISense_Damage.h"
@@ -14,6 +15,7 @@
 ABDFRAIController::ABDFRAIController()
 {
     AwarenessComponent = CreateDefaultSubobject<UBDFRAwarenessComponent>(TEXT("BDFRAwareness"));
+    StressComponent = CreateDefaultSubobject<UBDFRStressComponent>(TEXT("BDFRStress"));
 
     BDFRPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("BDFRPerception"));
     SetPerceptionComponent(*BDFRPerceptionComponent);
@@ -58,7 +60,18 @@ void ABDFRAIController::BeginPlay()
 
 void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAIStimulus Stimulus)
 {
-    if (!IsValid(SourceActor) || !IsValid(AwarenessComponent) || !BDFR_ShouldProcessPerceivedActor(SourceActor))
+    if (!IsValid(SourceActor))
+    {
+        return;
+    }
+
+    if (IsDistressStimulus(Stimulus))
+    {
+        HandleDistressStimulus(SourceActor, Stimulus);
+        return;
+    }
+
+    if (!IsValid(AwarenessComponent) || !BDFR_ShouldProcessPerceivedActor(SourceActor))
     {
         return;
     }
@@ -112,4 +125,79 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
 bool ABDFRAIController::BDFR_ShouldProcessPerceivedActor_Implementation(AActor* SourceActor) const
 {
     return IsValid(SourceActor) && SourceActor != GetPawn();
+}
+
+bool ABDFRAIController::BDFR_ShouldRespondToDistress_Implementation(AActor* SourceActor) const
+{
+    return IsValid(SourceActor) && SourceActor != GetPawn();
+}
+
+void ABDFRAIController::ClearPendingAssistance()
+{
+    PendingAssistanceTarget = nullptr;
+    PendingAssistanceLocation = FVector::ZeroVector;
+    PendingAssistanceUrgency = 0.0f;
+}
+
+bool ABDFRAIController::IsDistressStimulus(const FAIStimulus& Stimulus) const
+{
+    const FAISenseID HearingSenseId = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
+
+    return Stimulus.Type == HearingSenseId
+        && Stimulus.WasSuccessfullySensed()
+        && Stimulus.Tag.ToString().StartsWith(TEXT("BDFR.Distress."));
+}
+
+void ABDFRAIController::HandleDistressStimulus(AActor* SourceActor, const FAIStimulus& Stimulus)
+{
+    const float Urgency = FMath::Clamp(Stimulus.Strength, 0.0f, 1.0f);
+
+    if (IsValid(StressComponent))
+    {
+        StressComponent->AddStress(GetDistressStressAmount(Stimulus.Tag, Urgency));
+    }
+
+    OnDistressPerceived.Broadcast(
+        SourceActor,
+        Stimulus.Tag,
+        Stimulus.StimulusLocation,
+        Urgency);
+
+    if (!BDFR_ShouldRespondToDistress(SourceActor))
+    {
+        return;
+    }
+
+    if (!IsValid(PendingAssistanceTarget) || Urgency >= PendingAssistanceUrgency)
+    {
+        PendingAssistanceTarget = SourceActor;
+        PendingAssistanceLocation = Stimulus.StimulusLocation;
+        PendingAssistanceUrgency = Urgency;
+    }
+}
+
+float ABDFRAIController::GetDistressStressAmount(const FName DistressTag, const float Urgency)
+{
+    const FString Tag = DistressTag.ToString();
+
+    float BaseStress = 0.12f;
+
+    if (Tag == TEXT("BDFR.Distress.AllyDown"))
+    {
+        BaseStress = 0.35f;
+    }
+    else if (Tag == TEXT("BDFR.Distress.BleedingOut"))
+    {
+        BaseStress = 0.30f;
+    }
+    else if (Tag == TEXT("BDFR.Distress.Help"))
+    {
+        BaseStress = 0.20f;
+    }
+    else if (Tag == TEXT("BDFR.Distress.Panic"))
+    {
+        BaseStress = 0.25f;
+    }
+
+    return FMath::Clamp(BaseStress * FMath::Max(0.25f, Urgency), 0.0f, 1.0f);
 }
