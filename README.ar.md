@@ -23,6 +23,7 @@
 - تقييم حالة الحلفاء والاستجابة لطلبات المساعدة،
 - أصوات إطلاق النار والانفجارات وضعف السمع المؤقت،
 - أنظمة اختيارية للأسر والرهائن والاستجواب،
+- مستويات صعوبة بطابع عسكري مع وضع `SAS` مخفي وPersistent Hunt،
 - التفاعل السياقي،
 - التكامل مع `Behavior Tree` و`Blackboard`،
 - استعلامات تكتيكية باستخدام `EQS`،
@@ -66,6 +67,9 @@
 - [x] نموذج False Statement وInformation Reliability
 - [x] Captivity Presentation Interface
 - [x] Gameplay Tags
+- [x] مستويات Recruit / Private / Sergeant / Commando
+- [x] فتح دائم لوضع SAS المخفي بعد إنهاء اللعبة على Commando
+- [x] Persistent Hunt في SAS بعد تأكيد وجود اللاعب
 - [ ] مزامنة Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -95,6 +99,7 @@ BDFR_InteractiveAI
 - `docs/HEALTH_DISTRESS_SOCIAL.md`
 - `docs/ACOUSTIC_HEARING.md`
 - `docs/CAPTIVITY_INTERROGATION.md`
+- `docs/DIFFICULTY_SYSTEM.md`
 
 ## هدف التكامل الأولي
 
