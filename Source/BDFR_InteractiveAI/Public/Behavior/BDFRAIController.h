@@ -5,6 +5,7 @@
 #include "Perception/AIPerceptionTypes.h"
 #include "BDFRAIController.generated.h"
 
+class UBDFRAcousticExposureComponent;
 class UBDFRAwarenessComponent;
 class UBDFRStressComponent;
 class UAIPerceptionComponent;
@@ -18,6 +19,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
     FName, DistressTag,
     FVector, Location,
     float, Urgency);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
+    FBDFROnAcousticEventPerceived,
+    AActor*, SourceActor,
+    FName, AcousticTag,
+    FVector, Location,
+    float, EffectiveStrength);
 
 UCLASS(Blueprintable)
 class BDFR_INTERACTIVEAI_API ABDFRAIController : public AAIController
@@ -36,6 +44,18 @@ public:
     UFUNCTION(BlueprintPure, Category = "BDFR|AI")
     UAIPerceptionComponent* GetBDFRPerceptionComponent() const { return BDFRPerceptionComponent; }
 
+    UFUNCTION(BlueprintPure, Category = "BDFR|Acoustics")
+    UBDFRAcousticExposureComponent* GetAcousticExposureComponent() const;
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Acoustics")
+    FVector GetLastHeardAcousticLocation() const { return LastHeardAcousticLocation; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Acoustics")
+    FName GetLastHeardAcousticTag() const { return LastHeardAcousticTag; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Acoustics")
+    float GetLastHeardAcousticStrength() const { return LastHeardAcousticStrength; }
+
     UFUNCTION(BlueprintPure, Category = "BDFR|Assistance")
     AActor* GetPendingAssistanceTarget() const { return PendingAssistanceTarget; }
 
@@ -50,6 +70,9 @@ public:
 
     UPROPERTY(BlueprintAssignable, Category = "BDFR|Social")
     FBDFROnDistressPerceived OnDistressPerceived;
+
+    UPROPERTY(BlueprintAssignable, Category = "BDFR|Acoustics")
+    FBDFROnAcousticEventPerceived OnAcousticEventPerceived;
 
 protected:
     virtual void BeginPlay() override;
@@ -94,8 +117,20 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Assistance")
     float PendingAssistanceUrgency = 0.0f;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Acoustics")
+    FVector LastHeardAcousticLocation = FVector::ZeroVector;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Acoustics")
+    FName LastHeardAcousticTag = NAME_None;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Acoustics")
+    float LastHeardAcousticStrength = 0.0f;
+
 private:
+    float GetCurrentHearingSensitivity() const;
     bool IsDistressStimulus(const FAIStimulus& Stimulus) const;
+    bool IsAcousticStimulus(const FAIStimulus& Stimulus) const;
     void HandleDistressStimulus(AActor* SourceActor, const FAIStimulus& Stimulus);
+    void HandleAcousticStimulus(AActor* SourceActor, const FAIStimulus& Stimulus);
     static float GetDistressStressAmount(FName DistressTag, float Urgency);
 };
