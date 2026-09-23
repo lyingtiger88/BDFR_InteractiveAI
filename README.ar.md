@@ -78,6 +78,9 @@
 - [x] Trail مستقل لآثار الأقدام والرائحة
 - [x] تتبع الرائحة للكلاب
 - [x] AI Controller للكلاب بحساسية سمع أعلى
+- [x] توجيه الأذنين والرأس نحو مصدر الصوت
+- [x] حالة مسح وانتباه للبيئة
+- [x] Hooks لحركات Engage وBark
 - [ ] مزامنة Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -110,6 +113,7 @@ BDFR_InteractiveAI
 - `docs/DIFFICULTY_SYSTEM.md`
 - `docs/INDIRECT_VISUAL_PERCEPTION.md`
 - `docs/TRACKING_CANINE_AI.md`
+- `docs/CANINE_ATTENTION_ANIMATION.md`
 
 ## هدف التكامل الأولي
 
