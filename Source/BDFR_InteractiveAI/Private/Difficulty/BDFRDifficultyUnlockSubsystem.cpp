@@ -3,6 +3,11 @@
 #include "Difficulty/BDFRDifficultyUnlockSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
+FString UBDFRDifficultyUnlockSubsystem::GetSaveSlotName()
+{
+    return TEXT("BDFR_DifficultyUnlocks");
+}
+
 void UBDFRDifficultyUnlockSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
@@ -56,14 +61,14 @@ void UBDFRDifficultyUnlockSubsystem::LoadUnlockState()
 {
     bSASUnlocked = false;
 
-    if (!UGameplayStatics::DoesSaveGameExist(SaveSlotName, SaveUserIndex))
+    if (!UGameplayStatics::DoesSaveGameExist(GetSaveSlotName(), SaveUserIndex))
     {
         return;
     }
 
     UBDFRDifficultyUnlockSaveGame* SaveGame =
         Cast<UBDFRDifficultyUnlockSaveGame>(
-            UGameplayStatics::LoadGameFromSlot(SaveSlotName, SaveUserIndex));
+            UGameplayStatics::LoadGameFromSlot(GetSaveSlotName(), SaveUserIndex));
 
     if (IsValid(SaveGame))
     {
@@ -84,5 +89,5 @@ void UBDFRDifficultyUnlockSubsystem::SaveUnlockState() const
     }
 
     SaveGame->bSASUnlocked = bSASUnlocked;
-    UGameplayStatics::SaveGameToSlot(SaveGame, SaveSlotName, SaveUserIndex);
+    UGameplayStatics::SaveGameToSlot(SaveGame, GetSaveSlotName(), SaveUserIndex);
 }
