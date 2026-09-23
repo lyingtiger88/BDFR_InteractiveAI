@@ -20,6 +20,16 @@ enum class EBDFRAIState : uint8
     Dead        UMETA(DisplayName = "Dead")
 };
 
+UENUM(BlueprintType)
+enum class EBDFRAwarenessLevel : uint8
+{
+    Unaware         UMETA(DisplayName = "Unaware"),
+    Suspicious      UMETA(DisplayName = "Suspicious"),
+    Investigating   UMETA(DisplayName = "Investigating"),
+    Alerted         UMETA(DisplayName = "Alerted"),
+    ConfirmedThreat UMETA(DisplayName = "Confirmed Threat")
+};
+
 USTRUCT(BlueprintType)
 struct BDFR_INTERACTIVEAI_API FBDFRAwarenessSnapshot
 {
@@ -27,6 +37,9 @@ struct BDFR_INTERACTIVEAI_API FBDFRAwarenessSnapshot
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Awareness")
     float Awareness = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Awareness")
+    EBDFRAwarenessLevel AwarenessLevel = EBDFRAwarenessLevel::Unaware;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Awareness")
     FVector LastKnownLocation = FVector::ZeroVector;
