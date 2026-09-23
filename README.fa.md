@@ -25,6 +25,7 @@ BDFR Interactive AI به‌عنوان یک پلاگین مستقل از پروژ
 - سیستم‌های اختیاری اسارت، گروگان‌گیری و بازجویی،
 - درجه‌های سختی نظامی‌محور و حالت مخفی `SAS` با Persistent Hunt،
 - تشخیص غیرمستقیم بازیکن از طریق سایه و انعکاس برای Commando و SAS،
+- ردیابی ردپا در Sergeant / Commando / SAS و هوش مصنوعی سگ با ردیابی بو،
 - تعاملات زمینه‌ای،
 - یکپارچه‌سازی با `Behavior Tree` و `Blackboard`،
 - تصمیم‌گیری تاکتیکی مبتنی بر `EQS`،
@@ -73,6 +74,10 @@ BDFR Interactive AI به‌عنوان یک پلاگین مستقل از پروژ
 - [x] Persistent Hunt در SAS پس از شناسایی قطعی بازیکن
 - [x] تشخیص سایه در Commando / SAS
 - [x] تشخیص انعکاس در آینه، آب آرام و فلز براق در Commando / SAS
+- [x] ردیابی ردپا در Sergeant / Commando / SAS
+- [x] تولید Trail مستقل برای Footprint و Scent
+- [x] ردیابی بو برای سگ
+- [x] AI Controller سگ با حساسیت شنیداری بالاتر
 - [ ] همگام‌سازی Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -104,6 +109,7 @@ BDFR_InteractiveAI
 - `docs/CAPTIVITY_INTERROGATION.md`
 - `docs/DIFFICULTY_SYSTEM.md`
 - `docs/INDIRECT_VISUAL_PERCEPTION.md`
+- `docs/TRACKING_CANINE_AI.md`
 
 ## هدف اولیه برای یکپارچه‌سازی
 
