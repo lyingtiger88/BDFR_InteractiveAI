@@ -18,6 +18,8 @@ class BDFR_INTERACTIVEAI_API UBDFRDifficultyComponent : public UActorComponent
 public:
     UBDFRDifficultyComponent();
 
+    virtual void BeginPlay() override;
+
     UFUNCTION(BlueprintCallable, Category = "BDFR|Difficulty")
     void SetDifficultyTier(EBDFRDifficultyTier NewTier);
 
@@ -47,5 +49,8 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty")
+    bool bUseProjectDefaultDifficulty = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty", meta = (EditCondition = "!bUseProjectDefaultDifficulty"))
     EBDFRDifficultyTier DifficultyTier = EBDFRDifficultyTier::Private;
 };
