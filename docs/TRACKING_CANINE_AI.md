@@ -243,19 +243,29 @@ Follow scent samples
 
 ## ProjectIGI integration
 
-`AIGIPlayerCharacter` now owns:
+ProjectIGI uses BDFR as a Git submodule and keeps all game-specific adapters in the host project.
 
-`UBDFRTrackEmitterComponent`
+`AIGIPlayerCharacter` owns:
 
-so the player automatically produces footprint and scent samples.
+```text
+UBDFRTrackEmitterComponent
+UIGITrackingSurfaceComponent
+```
 
-ProjectIGI also includes:
+The first emits footprints/scent. The second maps Unreal Physical Materials to BDFR track surfaces.
 
-`AIGIDogAIController : ABDFRCanineAIController`
+ProjectIGI includes:
 
-It filters hostile perception to `AIGIPlayerCharacter`.
+```text
+AIGIEnemyAIController : ABDFRAIController
+AIGIDogAIController   : ABDFRCanineAIController
+```
 
-A future dog Pawn/Character can use `AIGIDogAIController` as its controller without coupling BDFR to a specific dog mesh, skeleton, or locomotion system.
+Both filter hostile perception to `AIGIPlayerCharacter`. Human enemies receive the BDFR
+difficulty-gated footprint tracker from the base controller; dogs additionally receive the canine scent tracker.
+
+See `docs/PROJECT_IGI_INTEGRATION.md` in this plugin and
+`docs/TRACKING_SCENT.md` in ProjectIGI for the full host-project wiring.
 
 ## Visual footprints
 
