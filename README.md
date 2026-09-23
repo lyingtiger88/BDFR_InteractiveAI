@@ -11,6 +11,9 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - suspicion and alert escalation,
 - investigation and search,
 - cover selection and cover behavior,
+- health / injury / bleeding,
+- distress calls and nearby psychological stress,
+- ally assessment and assistance requests,
 - contextual interaction,
 - Behavior Tree / Blackboard integration,
 - EQS-based tactical queries,
@@ -40,6 +43,11 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - [x] Awareness accumulation / decay
 - [x] Last known target location
 - [x] Confirmed threat memory
+- [x] Health states and bleeding
+- [x] Automatic pain/help distress signals
+- [x] Nearby AI stress response
+- [x] Pending ally assistance target/urgency
+- [x] Assistance interface
 - [ ] Gameplay tags
 - [ ] Blackboard sync
 - [ ] Behavior Tree tasks/services
@@ -64,7 +72,7 @@ BDFR_InteractiveAI
 └── Interfaces
 ```
 
-See `docs/ARCHITECTURE.md`.
+See `docs/ARCHITECTURE.md` and `docs/HEALTH_DISTRESS_SOCIAL.md`.
 
 ## Initial integration target
 
