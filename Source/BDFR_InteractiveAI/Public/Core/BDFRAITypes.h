@@ -6,18 +6,22 @@
 UENUM(BlueprintType)
 enum class EBDFRAIState : uint8
 {
-    Idle        UMETA(DisplayName = "Idle"),
-    Patrol      UMETA(DisplayName = "Patrol"),
-    Observe     UMETA(DisplayName = "Observe"),
-    Suspicious  UMETA(DisplayName = "Suspicious"),
-    Investigate UMETA(DisplayName = "Investigate"),
-    Search      UMETA(DisplayName = "Search"),
-    Alerted     UMETA(DisplayName = "Alerted"),
-    Combat      UMETA(DisplayName = "Combat"),
-    TakeCover   UMETA(DisplayName = "Take Cover"),
-    Interact    UMETA(DisplayName = "Interact"),
-    Disabled    UMETA(DisplayName = "Disabled"),
-    Dead        UMETA(DisplayName = "Dead")
+    Idle              UMETA(DisplayName = "Idle"),
+    Patrol            UMETA(DisplayName = "Patrol"),
+    Observe           UMETA(DisplayName = "Observe"),
+    Suspicious        UMETA(DisplayName = "Suspicious"),
+    Investigate       UMETA(DisplayName = "Investigate"),
+    Search            UMETA(DisplayName = "Search"),
+    Alerted           UMETA(DisplayName = "Alerted"),
+    Combat            UMETA(DisplayName = "Combat"),
+    TakeCover         UMETA(DisplayName = "Take Cover"),
+    RespondToDistress UMETA(DisplayName = "Respond To Distress"),
+    AssessAlly        UMETA(DisplayName = "Assess Ally"),
+    AssistAlly        UMETA(DisplayName = "Assist Ally"),
+    Panic             UMETA(DisplayName = "Panic"),
+    Interact          UMETA(DisplayName = "Interact"),
+    Disabled          UMETA(DisplayName = "Disabled"),
+    Dead              UMETA(DisplayName = "Dead")
 };
 
 UENUM(BlueprintType)
