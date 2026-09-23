@@ -5,6 +5,10 @@
 #include "Tracking/BDFRTrackingTypes.h"
 #include "BDFRTrackEmitterComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+    FBDFROnTrackSampleEmitted,
+    FBDFRTrackSample, Sample);
+
 UCLASS(ClassGroup = (BDFR), meta = (BlueprintSpawnableComponent))
 class BDFR_INTERACTIVEAI_API UBDFRTrackEmitterComponent : public UActorComponent
 {
@@ -27,6 +31,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "BDFR|Tracking")
     void EmitScentNow(float StrengthOverride = -1.0f);
+
+    UPROPERTY(BlueprintAssignable, Category = "BDFR|Tracking")
+    FBDFROnTrackSampleEmitted OnTrackSampleEmitted;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Tracking")
