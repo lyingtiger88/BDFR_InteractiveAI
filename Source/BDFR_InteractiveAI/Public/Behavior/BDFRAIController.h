@@ -9,6 +9,7 @@
 class UBDFRAcousticExposureComponent;
 class UBDFRAwarenessComponent;
 class UBDFRDifficultyComponent;
+class UBDFRIndirectVisualPerceptionComponent;
 class UBDFRStressComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Damage;
@@ -45,6 +46,12 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
     UBDFRDifficultyComponent* GetDifficultyComponent() const { return DifficultyComponent; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Indirect Visual")
+    UBDFRIndirectVisualPerceptionComponent* GetIndirectVisualPerceptionComponent() const
+    {
+        return IndirectVisualPerceptionComponent;
+    }
 
     UFUNCTION(BlueprintPure, Category = "BDFR|AI")
     UAIPerceptionComponent* GetBDFRPerceptionComponent() const { return BDFRPerceptionComponent; }
@@ -118,6 +125,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty")
     TObjectPtr<UBDFRDifficultyComponent> DifficultyComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Indirect Visual")
+    TObjectPtr<UBDFRIndirectVisualPerceptionComponent> IndirectVisualPerceptionComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|AI")
     TObjectPtr<UAIPerceptionComponent> BDFRPerceptionComponent;
