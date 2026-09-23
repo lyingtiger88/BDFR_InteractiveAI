@@ -25,6 +25,7 @@
 - أنظمة اختيارية للأسر والرهائن والاستجواب،
 - مستويات صعوبة بطابع عسكري مع وضع `SAS` مخفي وPersistent Hunt،
 - إدراك بصري غير مباشر عبر الظلال والانعكاسات في Commando وSAS،
+- تتبع آثار الأقدام في Sergeant / Commando / SAS وذكاء اصطناعي للكلاب يعتمد على الرائحة،
 - التفاعل السياقي،
 - التكامل مع `Behavior Tree` و`Blackboard`،
 - استعلامات تكتيكية باستخدام `EQS`،
@@ -73,6 +74,10 @@
 - [x] Persistent Hunt في SAS بعد تأكيد وجود اللاعب
 - [x] اكتشاف الظلال في Commando / SAS
 - [x] اكتشاف الانعكاس في المرآة والماء الهادئ والمعادن المصقولة
+- [x] تتبع آثار الأقدام في Sergeant / Commando / SAS
+- [x] Trail مستقل لآثار الأقدام والرائحة
+- [x] تتبع الرائحة للكلاب
+- [x] AI Controller للكلاب بحساسية سمع أعلى
 - [ ] مزامنة Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -104,6 +109,7 @@ BDFR_InteractiveAI
 - `docs/CAPTIVITY_INTERROGATION.md`
 - `docs/DIFFICULTY_SYSTEM.md`
 - `docs/INDIRECT_VISUAL_PERCEPTION.md`
+- `docs/TRACKING_CANINE_AI.md`
 
 ## هدف التكامل الأولي
 
