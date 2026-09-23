@@ -1,5 +1,12 @@
 # BDFR Interactive AI
 
+<p align="center">
+  <a href="README.md">English</a> •
+  <a href="README.fa.md">فارسی</a> •
+  <a href="README.ar.md">العربية</a> •
+  <a href="README.ru.md">Русский</a>
+</p>
+
 Reusable tactical AI framework for Unreal Engine 5.
 
 ## Goal
@@ -58,7 +65,7 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - [x] Optional interrogation model
 - [x] False-statement / information-reliability model
 - [x] Captivity presentation interface
-- [ ] Gameplay tags
+- [x] Gameplay tags
 - [ ] Blackboard sync
 - [ ] Behavior Tree tasks/services
 - [ ] Patrol route
