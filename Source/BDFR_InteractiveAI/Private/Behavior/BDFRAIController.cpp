@@ -3,6 +3,7 @@
 #include "Acoustics/BDFRAcousticExposureComponent.h"
 #include "Awareness/BDFRAwarenessComponent.h"
 #include "Core/BDFRAISettings.h"
+#include "Difficulty/BDFRDifficultyComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Social/BDFRStressComponent.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -18,6 +19,7 @@ ABDFRAIController::ABDFRAIController()
 {
     AwarenessComponent = CreateDefaultSubobject<UBDFRAwarenessComponent>(TEXT("BDFRAwareness"));
     StressComponent = CreateDefaultSubobject<UBDFRStressComponent>(TEXT("BDFRStress"));
+    DifficultyComponent = CreateDefaultSubobject<UBDFRDifficultyComponent>(TEXT("BDFRDifficulty"));
 
     BDFRPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("BDFRPerception"));
     SetPerceptionComponent(*BDFRPerceptionComponent);
@@ -58,6 +60,22 @@ void ABDFRAIController::BeginPlay()
             this,
             &ThisClass::HandleTargetPerceptionUpdated);
     }
+
+    if (IsValid(DifficultyComponent))
+    {
+        DifficultyComponent->OnDifficultyChanged.AddDynamic(
+            this,
+            &ThisClass::HandleDifficultyChanged);
+    }
+
+    ApplyDifficultyToPerception();
+}
+
+void ABDFRAIController::HandleDifficultyChanged(
+    const EBDFRDifficultyTier PreviousTier,
+    const EBDFRDifficultyTier NewTier)
+{
+    ApplyDifficultyToPerception();
 }
 
 UBDFRAcousticExposureComponent* ABDFRAIController::GetAcousticExposureComponent() const
@@ -111,7 +129,7 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
         {
             AwarenessComponent->AddAwareness(
                 SourceActor,
-                Settings->SightAwarenessGain,
+                Settings->SightAwarenessGain * GetAwarenessGainMultiplier(),
                 Stimulus.StimulusLocation,
                 false,
                 true);
@@ -134,7 +152,7 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
         {
             AwarenessComponent->AddAwareness(
                 SourceActor,
-                Settings->HearingAwarenessGain * EffectiveHearingStrength,
+                Settings->HearingAwarenessGain * EffectiveHearingStrength * GetAwarenessGainMultiplier(),
                 Stimulus.StimulusLocation,
                 false,
                 false);
@@ -147,7 +165,7 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
     {
         AwarenessComponent->AddAwareness(
             SourceActor,
-            Settings->DamageAwarenessGain,
+            Settings->DamageAwarenessGain * GetAwarenessGainMultiplier(),
             Stimulus.StimulusLocation,
             true,
             false);
@@ -171,11 +189,57 @@ void ABDFRAIController::ClearPendingAssistance()
     PendingAssistanceUrgency = 0.0f;
 }
 
+void ABDFRAIController::ApplyDifficultyToPerception()
+{
+    if (!IsValid(DifficultyComponent) || !IsValid(BDFRPerceptionComponent))
+    {
+        return;
+    }
+
+    const UBDFRAISettings* Settings = GetDefault<UBDFRAISettings>();
+    const FBDFRDifficultyProfile Profile = DifficultyComponent->GetDifficultyProfile();
+
+    if (IsValid(SightConfig))
+    {
+        SightConfig->SightRadius = Settings->DefaultSightRadius * Profile.SightRadiusMultiplier;
+        SightConfig->LoseSightRadius = Settings->DefaultLoseSightRadius * Profile.SightRadiusMultiplier;
+        BDFRPerceptionComponent->ConfigureSense(*SightConfig);
+    }
+
+    if (IsValid(HearingConfig))
+    {
+        HearingConfig->HearingRange = Settings->DefaultHearingRange * Profile.HearingSensitivityMultiplier;
+        BDFRPerceptionComponent->ConfigureSense(*HearingConfig);
+    }
+
+    BDFRPerceptionComponent->RequestStimuliListenerUpdate();
+}
+
 float ABDFRAIController::GetCurrentHearingSensitivity() const
 {
     const UBDFRAcousticExposureComponent* ExposureComponent = GetAcousticExposureComponent();
-    return IsValid(ExposureComponent)
+    const float ExposureSensitivity = IsValid(ExposureComponent)
         ? ExposureComponent->GetHearingSensitivity()
+        : 1.0f;
+
+    const float DifficultySensitivity = IsValid(DifficultyComponent)
+        ? DifficultyComponent->GetDifficultyProfile().HearingSensitivityMultiplier
+        : 1.0f;
+
+    return FMath::Clamp(ExposureSensitivity * DifficultySensitivity, 0.0f, 2.0f);
+}
+
+float ABDFRAIController::GetAwarenessGainMultiplier() const
+{
+    return IsValid(DifficultyComponent)
+        ? DifficultyComponent->GetDifficultyProfile().AwarenessGainMultiplier
+        : 1.0f;
+}
+
+float ABDFRAIController::GetStressGainMultiplier() const
+{
+    return IsValid(DifficultyComponent)
+        ? DifficultyComponent->GetStressGainMultiplier()
         : 1.0f;
 }
 
@@ -210,7 +274,8 @@ void ABDFRAIController::HandleDistressStimulus(AActor* SourceActor, const FAISti
 
     if (IsValid(StressComponent))
     {
-        StressComponent->AddStress(GetDistressStressAmount(Stimulus.Tag, Urgency));
+        StressComponent->AddStress(
+            GetDistressStressAmount(Stimulus.Tag, Urgency) * GetStressGainMultiplier());
     }
 
     OnDistressPerceived.Broadcast(
@@ -253,11 +318,11 @@ void ABDFRAIController::HandleAcousticStimulus(AActor* SourceActor, const FAISti
     {
         if (AcousticTag.Contains(TEXT("Explosion")))
         {
-            StressComponent->AddStress(0.30f * EffectiveStrength);
+            StressComponent->AddStress(0.30f * EffectiveStrength * GetStressGainMultiplier());
         }
         else if (AcousticTag.Contains(TEXT("Gunshot")))
         {
-            StressComponent->AddStress(0.12f * EffectiveStrength);
+            StressComponent->AddStress(0.12f * EffectiveStrength * GetStressGainMultiplier());
         }
     }
 
