@@ -32,6 +32,17 @@ public:
         bool bSimulateBlastTravelTime = true,
         float PropagationSpeedCmPerSecond = 34300.0f);
 
+    // Lightweight semantic AI-hearing event for movement, gear, handling, impacts, etc.
+    // Unlike ReportGunshot / ReportExplosion this does not apply acoustic exposure.
+    UFUNCTION(BlueprintCallable, Category = "BDFR|Acoustics", meta = (WorldContext = "WorldContextObject"))
+    static void ReportAcousticEvent(
+        UObject* WorldContextObject,
+        AActor* InstigatorActor,
+        FVector Location,
+        float Loudness,
+        float HearingRadius,
+        FName EventTag);
+
 private:
     static void ReportAcousticNoise(
         UObject* WorldContextObject,

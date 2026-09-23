@@ -67,6 +67,32 @@ void UBDFRAcousticEventLibrary::ReportExplosion(
         PropagationSpeedCmPerSecond);
 }
 
+void UBDFRAcousticEventLibrary::ReportAcousticEvent(
+    UObject* WorldContextObject,
+    AActor* InstigatorActor,
+    const FVector Location,
+    const float Loudness,
+    const float HearingRadius,
+    const FName EventTag)
+{
+    FString TagString = EventTag.IsNone()
+        ? TEXT("BDFR.Acoustic.Generic")
+        : EventTag.ToString();
+
+    if (!TagString.StartsWith(TEXT("BDFR.Acoustic.")))
+    {
+        TagString = FString::Printf(TEXT("BDFR.Acoustic.%s"), *TagString);
+    }
+
+    ReportAcousticNoise(
+        WorldContextObject,
+        InstigatorActor,
+        Location,
+        FMath::Clamp(Loudness, 0.05f, 1.0f),
+        FMath::Max(0.0f, HearingRadius),
+        FName(*TagString));
+}
+
 void UBDFRAcousticEventLibrary::ReportAcousticNoise(
     UObject* WorldContextObject,
     AActor* InstigatorActor,

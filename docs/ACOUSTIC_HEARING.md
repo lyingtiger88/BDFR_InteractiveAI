@@ -43,6 +43,26 @@ BDFR.Acoustic.Explosion
 
 The default propagation speed is 34300 cm/s (343 m/s).
 
+### Lightweight acoustic events
+
+`ReportAcousticEvent(...)` emits a semantic Unreal AI Hearing stimulus without applying
+physical acoustic exposure. It is intended for movement and equipment sounds such as:
+
+```text
+BDFR.Acoustic.Movement.Footstep
+BDFR.Acoustic.Movement.Gear
+BDFR.Acoustic.Movement.Landing
+BDFR.Acoustic.Movement.Vault
+BDFR.Acoustic.Weapon.Equip
+BDFR.Acoustic.Weapon.Reload
+BDFR.Acoustic.Weapon.Attachment
+```
+
+If a caller supplies a tag without the `BDFR.Acoustic.` prefix, BDFR adds the prefix automatically.
+This keeps the existing acoustic-event filtering in `ABDFRAIController` working.
+
+Movement/gear events should use modest loudness/ranges and do **not** damage or impair hearing.
+
 ## Hearing exposure states
 
 `UBDFRAcousticExposureComponent` tracks cumulative exposure:
@@ -74,6 +94,7 @@ This affects:
 
 - gunshot awareness,
 - explosion awareness,
+- movement / gear awareness,
 - distress/help calls,
 - psychological stress from heard events.
 
@@ -89,6 +110,7 @@ Initial behavior:
 
 - gunshots add moderate stress,
 - explosions add stronger stress,
+- ordinary movement / gear events feed awareness but do not add the gunshot/explosion stress bonus,
 - hearing impairment can reduce later heard-event influence.
 
 ## Gameplay hooks
@@ -102,25 +124,18 @@ Initial behavior:
 - combat barks such as "I can't hear!",
 - HUD/audio post-processing for player-controlled characters.
 
+`OnAcousticEventPerceived` can be used for investigation/search behaviors based on semantic tags.
+
 ## ProjectIGI integration
 
-`AIGIEnemyCharacter` owns a `UBDFRAcousticExposureComponent`.
+ProjectIGI uses:
 
-Weapon code should call:
+- `ReportGunshot` for actual shots,
+- `ReportExplosion` for grenade/explosive detonation,
+- `ReportAcousticEvent` for footsteps, carried-gear rattle, landing, vaulting, equip/reload, and attachment handling.
 
-```text
-ReportGunshot
-```
-
-for each actual shot.
-
-Explosion/grenade code should call:
-
-```text
-ReportExplosion
-```
-
-at detonation.
+This lets weapon loadout, movement speed, stance, physical surface, and suppressors affect AI hearing
+without coupling BDFR to ProjectIGI-specific inventory or locomotion classes.
 
 ## Native AI Hearing limitation
 
