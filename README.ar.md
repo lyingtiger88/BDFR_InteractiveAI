@@ -24,6 +24,7 @@
 - أصوات إطلاق النار والانفجارات وضعف السمع المؤقت،
 - أنظمة اختيارية للأسر والرهائن والاستجواب،
 - مستويات صعوبة بطابع عسكري مع وضع `SAS` مخفي وPersistent Hunt،
+- إدراك بصري غير مباشر عبر الظلال والانعكاسات في Commando وSAS،
 - التفاعل السياقي،
 - التكامل مع `Behavior Tree` و`Blackboard`،
 - استعلامات تكتيكية باستخدام `EQS`،
@@ -70,6 +71,8 @@
 - [x] مستويات Recruit / Private / Sergeant / Commando
 - [x] فتح دائم لوضع SAS المخفي بعد إنهاء اللعبة على Commando
 - [x] Persistent Hunt في SAS بعد تأكيد وجود اللاعب
+- [x] اكتشاف الظلال في Commando / SAS
+- [x] اكتشاف الانعكاس في المرآة والماء الهادئ والمعادن المصقولة
 - [ ] مزامنة Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -100,6 +103,7 @@ BDFR_InteractiveAI
 - `docs/ACOUSTIC_HEARING.md`
 - `docs/CAPTIVITY_INTERROGATION.md`
 - `docs/DIFFICULTY_SYSTEM.md`
+- `docs/INDIRECT_VISUAL_PERCEPTION.md`
 
 ## هدف التكامل الأولي
 
