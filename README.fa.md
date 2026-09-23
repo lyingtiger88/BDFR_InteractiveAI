@@ -24,6 +24,7 @@ BDFR Interactive AI به‌عنوان یک پلاگین مستقل از پروژ
 - تشخیص صدای شلیک و انفجار و اختلال موقت شنوایی،
 - سیستم‌های اختیاری اسارت، گروگان‌گیری و بازجویی،
 - درجه‌های سختی نظامی‌محور و حالت مخفی `SAS` با Persistent Hunt،
+- تشخیص غیرمستقیم بازیکن از طریق سایه و انعکاس برای Commando و SAS،
 - تعاملات زمینه‌ای،
 - یکپارچه‌سازی با `Behavior Tree` و `Blackboard`،
 - تصمیم‌گیری تاکتیکی مبتنی بر `EQS`،
@@ -70,6 +71,8 @@ BDFR Interactive AI به‌عنوان یک پلاگین مستقل از پروژ
 - [x] درجه‌های سختی Recruit / Private / Sergeant / Commando
 - [x] Unlock دائمی درجه مخفی SAS پس از اتمام بازی روی Commando
 - [x] Persistent Hunt در SAS پس از شناسایی قطعی بازیکن
+- [x] تشخیص سایه در Commando / SAS
+- [x] تشخیص انعکاس در آینه، آب آرام و فلز براق در Commando / SAS
 - [ ] همگام‌سازی Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -100,6 +103,7 @@ BDFR_InteractiveAI
 - `docs/ACOUSTIC_HEARING.md`
 - `docs/CAPTIVITY_INTERROGATION.md`
 - `docs/DIFFICULTY_SYSTEM.md`
+- `docs/INDIRECT_VISUAL_PERCEPTION.md`
 
 ## هدف اولیه برای یکپارچه‌سازی
 
