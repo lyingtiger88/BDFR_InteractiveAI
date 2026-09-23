@@ -66,9 +66,9 @@ void UBDFRCanineAttentionComponent::ResolveAttentionTarget(
     float& OutAlertness,
     AActor*& OutEngageTarget) const
 {
-    APawn* Pawn = Cast<APawn>(GetOwner());
     ABDFRCanineAIController* Controller =
-        IsValid(Pawn) ? Cast<ABDFRCanineAIController>(Pawn->GetController()) : nullptr;
+        Cast<ABDFRCanineAIController>(GetOwner());
+    APawn* Pawn = IsValid(Controller) ? Controller->GetPawn() : nullptr;
 
     if (!IsValid(Pawn) || !IsValid(Controller))
     {
@@ -143,7 +143,9 @@ void UBDFRCanineAttentionComponent::UpdateAimOffsets(
     const bool bHasFocus,
     const float DeltaTime)
 {
-    APawn* Pawn = Cast<APawn>(GetOwner());
+    ABDFRCanineAIController* Controller =
+        Cast<ABDFRCanineAIController>(GetOwner());
+    APawn* Pawn = IsValid(Controller) ? Controller->GetPawn() : nullptr;
 
     float TargetYaw = 0.0f;
     float TargetPitch = 0.0f;
@@ -191,16 +193,19 @@ void UBDFRCanineAttentionComponent::UpdateAimOffsets(
 
 void UBDFRCanineAttentionComponent::PushPresentation(AActor* EngageTarget)
 {
-    AActor* Owner = GetOwner();
-    if (!IsValid(Owner))
+    ABDFRCanineAIController* Controller =
+        Cast<ABDFRCanineAIController>(GetOwner());
+    APawn* Pawn = IsValid(Controller) ? Controller->GetPawn() : nullptr;
+
+    if (!IsValid(Pawn))
     {
         return;
     }
 
-    if (Owner->GetClass()->ImplementsInterface(UBDFRCaninePresentationInterface::StaticClass()))
+    if (Pawn->GetClass()->ImplementsInterface(UBDFRCaninePresentationInterface::StaticClass()))
     {
         IBDFRCaninePresentationInterface::Execute_BDFR_UpdateCanineAttention(
-            Owner,
+            Pawn,
             Snapshot);
 
         if (Snapshot.State == EBDFRCanineAttentionState::Engaging
@@ -208,14 +213,10 @@ void UBDFRCanineAttentionComponent::PushPresentation(AActor* EngageTarget)
             && !bEngageAnimationSent)
         {
             IBDFRCaninePresentationInterface::Execute_BDFR_PlayCanineEngage(
-                Owner,
+                Pawn,
                 EngageTarget);
             bEngageAnimationSent = true;
         }
-
-        APawn* Pawn = Cast<APawn>(Owner);
-        ABDFRCanineAIController* Controller =
-            IsValid(Pawn) ? Cast<ABDFRCanineAIController>(Pawn->GetController()) : nullptr;
 
         const UWorld* World = GetWorld();
         const float Now = IsValid(World) ? World->GetTimeSeconds() : 0.0f;
@@ -226,7 +227,7 @@ void UBDFRCanineAttentionComponent::PushPresentation(AActor* EngageTarget)
             && Now - LastBarkTimeSeconds >= 4.0f)
         {
             IBDFRCaninePresentationInterface::Execute_BDFR_PlayCanineBark(
-                Owner,
+                Pawn,
                 TEXT("BDFR.Canine.Bark.StrongSound"));
             LastBarkTimeSeconds = Now;
         }
