@@ -38,7 +38,7 @@ public:
     float DefaultSightMaxAge = 4.0f;
 
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Hearing", meta = (ClampMin = "0.0"))
-    float DefaultHearingRange = 1800.0f;
+    float DefaultHearingRange = 15000.0f;
 
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Hearing", meta = (ClampMin = "0.0"))
     float DefaultHearingMaxAge = 5.0f;
