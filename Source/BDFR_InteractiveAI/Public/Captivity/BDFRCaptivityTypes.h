@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "BDFRCaptivityTypes.generated.h"
 
+class AActor;
+
 UENUM(BlueprintType)
 enum class EBDFRCaptivityState : uint8
 {
