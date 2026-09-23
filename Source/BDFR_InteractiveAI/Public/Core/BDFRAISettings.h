@@ -25,12 +25,30 @@ public:
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Awareness", meta = (ClampMin = "0.0"))
     float AwarenessDecayPerSecond = 0.08f;
 
-    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception", meta = (ClampMin = "0.0"))
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Sight", meta = (ClampMin = "0.0"))
     float DefaultSightRadius = 2500.0f;
 
-    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception", meta = (ClampMin = "0.0"))
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Sight", meta = (ClampMin = "0.0"))
     float DefaultLoseSightRadius = 3200.0f;
 
-    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception", meta = (ClampMin = "0.0", ClampMax = "180.0"))
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Sight", meta = (ClampMin = "0.0", ClampMax = "180.0"))
     float DefaultPeripheralVisionHalfAngle = 70.0f;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Sight", meta = (ClampMin = "0.0"))
+    float DefaultSightMaxAge = 4.0f;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Hearing", meta = (ClampMin = "0.0"))
+    float DefaultHearingRange = 1800.0f;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Hearing", meta = (ClampMin = "0.0"))
+    float DefaultHearingMaxAge = 5.0f;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Awareness Gain", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+    float SightAwarenessGain = 0.60f;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Awareness Gain", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+    float HearingAwarenessGain = 0.25f;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Perception|Awareness Gain", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+    float DamageAwarenessGain = 1.0f;
 };
