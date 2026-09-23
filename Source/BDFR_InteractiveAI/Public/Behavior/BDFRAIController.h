@@ -10,6 +10,7 @@ class UBDFRAcousticExposureComponent;
 class UBDFRAwarenessComponent;
 class UBDFRDifficultyComponent;
 class UBDFRIndirectVisualPerceptionComponent;
+class UBDFRFootprintTrackingComponent;
 class UBDFRStressComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Damage;
@@ -51,6 +52,12 @@ public:
     UBDFRIndirectVisualPerceptionComponent* GetIndirectVisualPerceptionComponent() const
     {
         return IndirectVisualPerceptionComponent;
+    }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Tracking")
+    UBDFRFootprintTrackingComponent* GetFootprintTrackingComponent() const
+    {
+        return FootprintTrackingComponent;
     }
 
     UFUNCTION(BlueprintPure, Category = "BDFR|AI")
@@ -117,6 +124,8 @@ protected:
 
     virtual bool BDFR_ShouldRespondToDistress_Implementation(AActor* SourceActor) const;
 
+    virtual float BDFR_GetSpeciesHearingMultiplier() const { return 1.0f; }
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|AI")
     TObjectPtr<UBDFRAwarenessComponent> AwarenessComponent;
 
@@ -128,6 +137,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Indirect Visual")
     TObjectPtr<UBDFRIndirectVisualPerceptionComponent> IndirectVisualPerceptionComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Tracking")
+    TObjectPtr<UBDFRFootprintTrackingComponent> FootprintTrackingComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|AI")
     TObjectPtr<UAIPerceptionComponent> BDFRPerceptionComponent;
