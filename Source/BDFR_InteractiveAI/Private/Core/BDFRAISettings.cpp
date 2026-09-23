@@ -15,6 +15,9 @@ UBDFRAISettings::UBDFRAISettings()
     RecruitDifficulty.CombatAccuracyMultiplier = 0.70f;
     RecruitDifficulty.CoverDecisionMultiplier = 0.70f;
     RecruitDifficulty.bPersistentHuntAfterConfirmedTarget = false;
+    RecruitDifficulty.bCanDetectShadows = false;
+    RecruitDifficulty.bCanDetectReflections = false;
+    RecruitDifficulty.IndirectVisualAwarenessMultiplier = 0.50f;
 
     PrivateDifficulty.Tier = EBDFRDifficultyTier::Private;
     PrivateDifficulty.SightRadiusMultiplier = 1.00f;
@@ -29,6 +32,9 @@ UBDFRAISettings::UBDFRAISettings()
     PrivateDifficulty.CombatAccuracyMultiplier = 1.00f;
     PrivateDifficulty.CoverDecisionMultiplier = 1.00f;
     PrivateDifficulty.bPersistentHuntAfterConfirmedTarget = false;
+    PrivateDifficulty.bCanDetectShadows = false;
+    PrivateDifficulty.bCanDetectReflections = false;
+    PrivateDifficulty.IndirectVisualAwarenessMultiplier = 0.75f;
 
     SergeantDifficulty.Tier = EBDFRDifficultyTier::Sergeant;
     SergeantDifficulty.SightRadiusMultiplier = 1.15f;
@@ -43,6 +49,9 @@ UBDFRAISettings::UBDFRAISettings()
     SergeantDifficulty.CombatAccuracyMultiplier = 1.18f;
     SergeantDifficulty.CoverDecisionMultiplier = 1.20f;
     SergeantDifficulty.bPersistentHuntAfterConfirmedTarget = false;
+    SergeantDifficulty.bCanDetectShadows = false;
+    SergeantDifficulty.bCanDetectReflections = false;
+    SergeantDifficulty.IndirectVisualAwarenessMultiplier = 0.90f;
 
     CommandoDifficulty.Tier = EBDFRDifficultyTier::Commando;
     CommandoDifficulty.SightRadiusMultiplier = 1.30f;
@@ -57,6 +66,9 @@ UBDFRAISettings::UBDFRAISettings()
     CommandoDifficulty.CombatAccuracyMultiplier = 1.32f;
     CommandoDifficulty.CoverDecisionMultiplier = 1.35f;
     CommandoDifficulty.bPersistentHuntAfterConfirmedTarget = false;
+    CommandoDifficulty.bCanDetectShadows = true;
+    CommandoDifficulty.bCanDetectReflections = true;
+    CommandoDifficulty.IndirectVisualAwarenessMultiplier = 1.00f;
 
     SASDifficulty.Tier = EBDFRDifficultyTier::SAS;
     SASDifficulty.SightRadiusMultiplier = 1.45f;
@@ -71,4 +83,7 @@ UBDFRAISettings::UBDFRAISettings()
     SASDifficulty.CombatAccuracyMultiplier = 1.45f;
     SASDifficulty.CoverDecisionMultiplier = 1.50f;
     SASDifficulty.bPersistentHuntAfterConfirmedTarget = true;
+    SASDifficulty.bCanDetectShadows = true;
+    SASDifficulty.bCanDetectReflections = true;
+    SASDifficulty.IndirectVisualAwarenessMultiplier = 1.45f;
 }
