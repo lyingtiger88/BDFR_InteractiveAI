@@ -73,6 +73,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "BDFR|Assistance")
     void ClearPendingAssistance();
 
+    UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty|Persistent Hunt")
+    bool IsPersistentHuntActive() const { return bPersistentHuntActive; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty|Persistent Hunt")
+    AActor* GetPersistentHuntTarget() const { return PersistentHuntTarget; }
+
+    UFUNCTION(BlueprintCallable, Category = "BDFR|Difficulty|Persistent Hunt")
+    void NotifyPersistentHuntTargetNeutralized(AActor* NeutralizedTarget);
+
+    UFUNCTION(BlueprintCallable, Category = "BDFR|Difficulty|Persistent Hunt")
+    void CancelPersistentHunt();
+
     UPROPERTY(BlueprintAssignable, Category = "BDFR|Social")
     FBDFROnDistressPerceived OnDistressPerceived;
 
@@ -137,8 +149,15 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Acoustics")
     float LastHeardAcousticStrength = 0.0f;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty|Persistent Hunt")
+    bool bPersistentHuntActive = false;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty|Persistent Hunt")
+    TObjectPtr<AActor> PersistentHuntTarget;
+
 private:
     void ApplyDifficultyToPerception();
+    void RefreshPersistentHuntState(AActor* SourceActor);
     float GetCurrentHearingSensitivity() const;
     float GetAwarenessGainMultiplier() const;
     float GetStressGainMultiplier() const;
