@@ -1,6 +1,8 @@
 #include "Difficulty/BDFRDifficultyComponent.h"
 
 #include "Core/BDFRAISettings.h"
+#include "Difficulty/BDFRDifficultyUnlockSubsystem.h"
+#include "Engine/GameInstance.h"
 
 UBDFRDifficultyComponent::UBDFRDifficultyComponent()
 {
@@ -13,12 +15,26 @@ void UBDFRDifficultyComponent::BeginPlay()
 
     if (bUseProjectDefaultDifficulty)
     {
-        DifficultyTier = GetDefault<UBDFRAISettings>()->DefaultDifficultyTier;
+        const EBDFRDifficultyTier ProjectDefault =
+            GetDefault<UBDFRAISettings>()->DefaultDifficultyTier;
+
+        DifficultyTier = CanSelectDifficultyTier(ProjectDefault)
+            ? ProjectDefault
+            : EBDFRDifficultyTier::Commando;
+    }
+    else if (!CanSelectDifficultyTier(DifficultyTier))
+    {
+        DifficultyTier = EBDFRDifficultyTier::Commando;
     }
 }
 
 void UBDFRDifficultyComponent::SetDifficultyTier(const EBDFRDifficultyTier NewTier)
 {
+    if (!CanSelectDifficultyTier(NewTier))
+    {
+        return;
+    }
+
     if (DifficultyTier == NewTier && !bUseProjectDefaultDifficulty)
     {
         return;
@@ -28,6 +44,24 @@ void UBDFRDifficultyComponent::SetDifficultyTier(const EBDFRDifficultyTier NewTi
     bUseProjectDefaultDifficulty = false;
     DifficultyTier = NewTier;
     OnDifficultyChanged.Broadcast(PreviousTier, DifficultyTier);
+}
+
+bool UBDFRDifficultyComponent::CanSelectDifficultyTier(
+    const EBDFRDifficultyTier Tier) const
+{
+    if (Tier != EBDFRDifficultyTier::SAS)
+    {
+        return true;
+    }
+
+    const UWorld* World = GetWorld();
+    const UGameInstance* GameInstance = IsValid(World) ? World->GetGameInstance() : nullptr;
+    const UBDFRDifficultyUnlockSubsystem* UnlockSubsystem =
+        IsValid(GameInstance)
+            ? GameInstance->GetSubsystem<UBDFRDifficultyUnlockSubsystem>()
+            : nullptr;
+
+    return IsValid(UnlockSubsystem) && UnlockSubsystem->IsDifficultyUnlocked(Tier);
 }
 
 FBDFRDifficultyProfile UBDFRDifficultyComponent::GetDifficultyProfile() const
@@ -44,6 +78,9 @@ FBDFRDifficultyProfile UBDFRDifficultyComponent::GetDifficultyProfile() const
 
         case EBDFRDifficultyTier::Commando:
             return Settings->CommandoDifficulty;
+
+        case EBDFRDifficultyTier::SAS:
+            return Settings->SASDifficulty;
 
         case EBDFRDifficultyTier::Private:
         default:
