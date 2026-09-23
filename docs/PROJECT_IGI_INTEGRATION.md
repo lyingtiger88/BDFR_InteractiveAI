@@ -2,7 +2,9 @@
 
 BDFR Interactive AI is intentionally independent from ALS Refactored.
 
-## Target dependency layout
+ProjectIGI owns the adapters; BDFR owns reusable AI/tracking systems.
+
+## Dependency layout
 
 ```text
 ProjectIGI_Remake/
@@ -11,27 +13,137 @@ ProjectIGI_Remake/
 │   └── BDFR_InteractiveAI/     -> BDFR plugin submodule
 └── Source/ProjectIGI_Remake/
     ├── IGIPlayerCharacter
-    ├── IGIEnemyCharacter
-    └── IGIBDFRLocomotionAdapter
+    ├── Tracking/
+    │   └── IGITrackingSurfaceComponent
+    └── AI/
+        ├── IGIEnemyAIController
+        └── IGIDogAIController
 ```
 
-## Recommended enemy inheritance
+The game module depends on both `ALS` and `BDFR_InteractiveAI`. BDFR itself does not include ALS
+headers and can be reused by projects with different character frameworks.
 
-For the first ProjectIGI enemy implementation:
+## Player tracking integration
+
+`AIGIPlayerCharacter : AAlsCharacter` owns:
 
 ```text
-AAlsCharacter
-    └── AIGIEnemyCharacter
-            ├── implements IBDFRLocomotionInterface
-            └── AIControllerClass = ABDFRAIController (or an IGI subclass)
+UBDFRTrackEmitterComponent
+UIGITrackingSurfaceComponent
 ```
 
-The enemy character remains project-owned. BDFR does not subclass ALS.
+The emitter produces logical:
+
+- footprint samples by movement distance,
+- scent samples by time interval.
+
+The ProjectIGI surface component performs a downward Physical Material trace and maps the project's
+physical surfaces to `EBDFRTrackSurfaceType`.
+
+ProjectIGI surface convention:
+
+| Physical Surface | BDFR surface |
+|---|---|
+| SurfaceType1 / Dirt | Dirt |
+| SurfaceType2 / Mud | Mud |
+| SurfaceType3 / Snow | Snow |
+| SurfaceType4 / Sand | Sand |
+| SurfaceType5 / Grass | Grass |
+| SurfaceType6 / Concrete | Concrete |
+| SurfaceType7 / Metal | Metal |
+| SurfaceType8 / Water | Water |
+
+This keeps BDFR independent from any particular set of project Physical Material assets.
+
+## Human enemy integration
+
+ProjectIGI provides:
+
+`AIGIEnemyAIController : ABDFRAIController`
+
+The base BDFR controller already owns:
+
+- awareness,
+- difficulty,
+- Sight / Hearing / Damage perception,
+- indirect visual perception,
+- footprint tracking.
+
+The ProjectIGI controller filters hostile perception to `AIGIPlayerCharacter`.
+
+Footprint tracking remains difficulty-gated by `FBDFRDifficultyProfile::bCanTrackFootprints`.
+
+## Canine integration
+
+ProjectIGI provides:
+
+`AIGIDogAIController : ABDFRCanineAIController`
+
+The BDFR canine controller adds:
+
+- `UBDFRCanineTrackingComponent`,
+- `UBDFRCanineAttentionComponent`,
+- species hearing multiplier.
+
+The ProjectIGI subclass uses the same player-target filter as human enemies.
+
+A dog Pawn/Character can therefore remain project-owned while BDFR supplies scent acquisition,
+trail following state, awareness integration, and attention data.
+
+## Track flow
+
+```text
+AIGIPlayerCharacter
+        |
+        | footprint / scent sample
+        v
+UBDFRTrackingWorldSubsystem
+        |
+        +--------------------+
+        |                    |
+        v                    v
+Human footprint         Canine scent
+tracker                 tracker
+        |                    |
+        v                    v
+next trail location     next scent location
+        |                    |
+        +---------+----------+
+                  |
+                  v
+        Project Behavior Tree / State Tree
+```
+
+BDFR stores track samples as lightweight structs rather than spawning one Actor per track point.
+
+## Behavior integration
+
+Human AI can query:
+
+```text
+GetFootprintTrackingComponent()
+HasActiveFootprintTrail()
+GetTrackedActor()
+GetNextTrackLocation()
+GetLastDetectedSample()
+```
+
+Canine AI can query:
+
+```text
+GetCanineTrackingComponent()
+HasScentTarget()
+GetScentTarget()
+GetNextScentLocation()
+GetLastScentSample()
+```
+
+The host project's Behavior Tree/State Tree should decide when to move to these locations, search,
+give up, alert allies, or transition to direct pursuit.
 
 ## ALS adapter responsibilities
 
-`AIGIEnemyCharacter` (or a dedicated component on it) should implement
-`IBDFRLocomotionInterface` and translate generic BDFR requests.
+For future ALS-driven enemy Characters, keep the adapter in ProjectIGI.
 
 Suggested mappings:
 
@@ -53,45 +165,25 @@ BDFR look target
   -> ALS consumes controller/look rotation through the project adapter
 ```
 
-Do not put ALS headers into the BDFR plugin.
+Do not add ALS as a BDFR dependency.
 
-## Perception flow
+## Visible footprints
 
-```text
-UAIPerceptionComponent
-        │
-        ├── Sight
-        ├── Hearing
-        └── Damage
-        │
-        ▼
-ABDFRAIController
-        │
-        ▼
-UBDFRAwarenessComponent
-        │
-        ├── Awareness 0..1
-        ├── Awareness Level
-        ├── Last Known Location
-        ├── Has Line Of Sight
-        └── Confirmed Target
-        │
-        ▼
-Behavior Tree / Blackboard (next layer)
-```
+The logical track system does not require decals.
 
-## Project-specific target filtering
+Projects can subscribe to:
 
-`ABDFRAIController::BDFR_ShouldProcessPerceivedActor` is a BlueprintNativeEvent.
+`UBDFRTrackEmitterComponent::OnTrackSampleEmitted`
 
-ProjectIGI should override it to reject friendly actors and non-target actors using the project's team/faction rules. The BDFR base implementation only rejects the controlled pawn itself.
+and render mud/snow/wet/blood footprint decals or Niagara effects. The presentation layer should not
+become the authoritative AI tracking state.
 
-## Next ProjectIGI integration step
+## Current ProjectIGI source
 
-1. Add BDFR as a Git submodule under `Plugins/BDFR_InteractiveAI`.
-2. Enable the plugin.
-3. Create `AIGIEnemyCharacter : AAlsCharacter`.
-4. Implement `IBDFRLocomotionInterface`.
-5. Create `AIGIEnemyAIController : ABDFRAIController`.
-6. Add faction filtering.
-7. Add Blackboard + Behavior Tree for Patrol / Observe / Investigate / Search.
+The integration is implemented in the ProjectIGI repository:
+
+- `Source/ProjectIGI_Remake/IGIPlayerCharacter.*`
+- `Source/ProjectIGI_Remake/Tracking/IGITrackingSurfaceComponent.*`
+- `Source/ProjectIGI_Remake/AI/IGIEnemyAIController.*`
+- `Source/ProjectIGI_Remake/AI/IGIDogAIController.*`
+- `docs/TRACKING_SCENT.md`
