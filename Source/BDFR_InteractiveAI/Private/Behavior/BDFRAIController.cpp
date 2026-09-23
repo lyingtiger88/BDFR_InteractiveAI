@@ -1,7 +1,9 @@
 #include "Behavior/BDFRAIController.h"
 
+#include "Acoustics/BDFRAcousticExposureComponent.h"
 #include "Awareness/BDFRAwarenessComponent.h"
 #include "Core/BDFRAISettings.h"
+#include "GameFramework/Pawn.h"
 #include "Social/BDFRStressComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense.h"
@@ -58,6 +60,14 @@ void ABDFRAIController::BeginPlay()
     }
 }
 
+UBDFRAcousticExposureComponent* ABDFRAIController::GetAcousticExposureComponent() const
+{
+    const APawn* ControlledPawn = GetPawn();
+    return IsValid(ControlledPawn)
+        ? ControlledPawn->FindComponentByClass<UBDFRAcousticExposureComponent>()
+        : nullptr;
+}
+
 void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAIStimulus Stimulus)
 {
     if (!IsValid(SourceActor))
@@ -65,10 +75,25 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
         return;
     }
 
-    if (IsDistressStimulus(Stimulus))
+    const FAISenseID HearingSenseId = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
+
+    if (Stimulus.Type == HearingSenseId && Stimulus.WasSuccessfullySensed())
     {
-        HandleDistressStimulus(SourceActor, Stimulus);
-        return;
+        if (GetCurrentHearingSensitivity() <= KINDA_SMALL_NUMBER)
+        {
+            return;
+        }
+
+        if (IsDistressStimulus(Stimulus))
+        {
+            HandleDistressStimulus(SourceActor, Stimulus);
+            return;
+        }
+
+        if (IsAcousticStimulus(Stimulus))
+        {
+            HandleAcousticStimulus(SourceActor, Stimulus);
+        }
     }
 
     if (!IsValid(AwarenessComponent) || !BDFR_ShouldProcessPerceivedActor(SourceActor))
@@ -78,7 +103,6 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
 
     const UBDFRAISettings* Settings = GetDefault<UBDFRAISettings>();
     const FAISenseID SightSenseId = UAISense::GetSenseID(UAISense_Sight::StaticClass());
-    const FAISenseID HearingSenseId = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
     const FAISenseID DamageSenseId = UAISense::GetSenseID(UAISense_Damage::StaticClass());
 
     if (Stimulus.Type == SightSenseId)
@@ -102,12 +126,20 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
 
     if (Stimulus.Type == HearingSenseId && Stimulus.WasSuccessfullySensed())
     {
-        AwarenessComponent->AddAwareness(
-            SourceActor,
-            Settings->HearingAwarenessGain,
-            Stimulus.StimulusLocation,
-            false,
-            false);
+        const float EffectiveHearingStrength =
+            FMath::Clamp(Stimulus.Strength, 0.1f, 1.0f)
+            * GetCurrentHearingSensitivity();
+
+        if (EffectiveHearingStrength > KINDA_SMALL_NUMBER)
+        {
+            AwarenessComponent->AddAwareness(
+                SourceActor,
+                Settings->HearingAwarenessGain * EffectiveHearingStrength,
+                Stimulus.StimulusLocation,
+                false,
+                false);
+        }
+
         return;
     }
 
@@ -139,6 +171,14 @@ void ABDFRAIController::ClearPendingAssistance()
     PendingAssistanceUrgency = 0.0f;
 }
 
+float ABDFRAIController::GetCurrentHearingSensitivity() const
+{
+    const UBDFRAcousticExposureComponent* ExposureComponent = GetAcousticExposureComponent();
+    return IsValid(ExposureComponent)
+        ? ExposureComponent->GetHearingSensitivity()
+        : 1.0f;
+}
+
 bool ABDFRAIController::IsDistressStimulus(const FAIStimulus& Stimulus) const
 {
     const FAISenseID HearingSenseId = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
@@ -148,9 +188,25 @@ bool ABDFRAIController::IsDistressStimulus(const FAIStimulus& Stimulus) const
         && Stimulus.Tag.ToString().StartsWith(TEXT("BDFR.Distress."));
 }
 
+bool ABDFRAIController::IsAcousticStimulus(const FAIStimulus& Stimulus) const
+{
+    const FAISenseID HearingSenseId = UAISense::GetSenseID(UAISense_Hearing::StaticClass());
+
+    return Stimulus.Type == HearingSenseId
+        && Stimulus.WasSuccessfullySensed()
+        && Stimulus.Tag.ToString().StartsWith(TEXT("BDFR.Acoustic."));
+}
+
 void ABDFRAIController::HandleDistressStimulus(AActor* SourceActor, const FAIStimulus& Stimulus)
 {
-    const float Urgency = FMath::Clamp(Stimulus.Strength, 0.0f, 1.0f);
+    const float Urgency =
+        FMath::Clamp(Stimulus.Strength, 0.0f, 1.0f)
+        * GetCurrentHearingSensitivity();
+
+    if (Urgency <= KINDA_SMALL_NUMBER)
+    {
+        return;
+    }
 
     if (IsValid(StressComponent))
     {
@@ -174,6 +230,42 @@ void ABDFRAIController::HandleDistressStimulus(AActor* SourceActor, const FAISti
         PendingAssistanceLocation = Stimulus.StimulusLocation;
         PendingAssistanceUrgency = Urgency;
     }
+}
+
+void ABDFRAIController::HandleAcousticStimulus(AActor* SourceActor, const FAIStimulus& Stimulus)
+{
+    const float EffectiveStrength =
+        FMath::Clamp(Stimulus.Strength, 0.0f, 1.0f)
+        * GetCurrentHearingSensitivity();
+
+    if (EffectiveStrength <= KINDA_SMALL_NUMBER)
+    {
+        return;
+    }
+
+    LastHeardAcousticLocation = Stimulus.StimulusLocation;
+    LastHeardAcousticTag = Stimulus.Tag;
+    LastHeardAcousticStrength = EffectiveStrength;
+
+    const FString AcousticTag = Stimulus.Tag.ToString();
+
+    if (IsValid(StressComponent))
+    {
+        if (AcousticTag.Contains(TEXT("Explosion")))
+        {
+            StressComponent->AddStress(0.30f * EffectiveStrength);
+        }
+        else if (AcousticTag.Contains(TEXT("Gunshot")))
+        {
+            StressComponent->AddStress(0.12f * EffectiveStrength);
+        }
+    }
+
+    OnAcousticEventPerceived.Broadcast(
+        SourceActor,
+        Stimulus.Tag,
+        Stimulus.StimulusLocation,
+        EffectiveStrength);
 }
 
 float ABDFRAIController::GetDistressStressAmount(const FName DistressTag, const float Urgency)
