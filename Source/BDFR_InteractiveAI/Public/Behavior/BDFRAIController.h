@@ -2,11 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Difficulty/BDFRDifficultyTypes.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "BDFRAIController.generated.h"
 
 class UBDFRAcousticExposureComponent;
 class UBDFRAwarenessComponent;
+class UBDFRDifficultyComponent;
 class UBDFRStressComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Damage;
@@ -40,6 +42,9 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "BDFR|AI")
     UBDFRStressComponent* GetStressComponent() const { return StressComponent; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
+    UBDFRDifficultyComponent* GetDifficultyComponent() const { return DifficultyComponent; }
 
     UFUNCTION(BlueprintPure, Category = "BDFR|AI")
     UAIPerceptionComponent* GetBDFRPerceptionComponent() const { return BDFRPerceptionComponent; }
@@ -80,6 +85,9 @@ protected:
     UFUNCTION()
     void HandleTargetPerceptionUpdated(AActor* SourceActor, FAIStimulus Stimulus);
 
+    UFUNCTION()
+    void HandleDifficultyChanged(EBDFRDifficultyTier PreviousTier, EBDFRDifficultyTier NewTier);
+
     UFUNCTION(BlueprintNativeEvent, Category = "BDFR|AI")
     bool BDFR_ShouldProcessPerceivedActor(AActor* SourceActor) const;
 
@@ -95,6 +103,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Social")
     TObjectPtr<UBDFRStressComponent> StressComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty")
+    TObjectPtr<UBDFRDifficultyComponent> DifficultyComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|AI")
     TObjectPtr<UAIPerceptionComponent> BDFRPerceptionComponent;
@@ -127,7 +138,10 @@ protected:
     float LastHeardAcousticStrength = 0.0f;
 
 private:
+    void ApplyDifficultyToPerception();
     float GetCurrentHearingSensitivity() const;
+    float GetAwarenessGainMultiplier() const;
+    float GetStressGainMultiplier() const;
     bool IsDistressStimulus(const FAIStimulus& Stimulus) const;
     bool IsAcousticStimulus(const FAIStimulus& Stimulus) const;
     void HandleDistressStimulus(AActor* SourceActor, const FAIStimulus& Stimulus);
