@@ -76,6 +76,12 @@ void ABDFRAIController::HandleDifficultyChanged(
     const EBDFRDifficultyTier NewTier)
 {
     ApplyDifficultyToPerception();
+
+    if (!IsValid(DifficultyComponent)
+        || !DifficultyComponent->ShouldPersistHuntAfterConfirmedTarget())
+    {
+        CancelPersistentHunt();
+    }
 }
 
 UBDFRAcousticExposureComponent* ABDFRAIController::GetAcousticExposureComponent() const
@@ -133,6 +139,7 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
                 Stimulus.StimulusLocation,
                 false,
                 true);
+            RefreshPersistentHuntState(SourceActor);
         }
         else
         {
@@ -156,6 +163,7 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
                 Stimulus.StimulusLocation,
                 false,
                 false);
+            RefreshPersistentHuntState(SourceActor);
         }
 
         return;
@@ -169,6 +177,7 @@ void ABDFRAIController::HandleTargetPerceptionUpdated(AActor* SourceActor, FAISt
             Stimulus.StimulusLocation,
             true,
             false);
+        RefreshPersistentHuntState(SourceActor);
     }
 }
 
@@ -187,6 +196,40 @@ void ABDFRAIController::ClearPendingAssistance()
     PendingAssistanceTarget = nullptr;
     PendingAssistanceLocation = FVector::ZeroVector;
     PendingAssistanceUrgency = 0.0f;
+}
+
+void ABDFRAIController::NotifyPersistentHuntTargetNeutralized(AActor* NeutralizedTarget)
+{
+    if (NeutralizedTarget == PersistentHuntTarget)
+    {
+        CancelPersistentHunt();
+    }
+}
+
+void ABDFRAIController::CancelPersistentHunt()
+{
+    bPersistentHuntActive = false;
+    PersistentHuntTarget = nullptr;
+}
+
+void ABDFRAIController::RefreshPersistentHuntState(AActor* SourceActor)
+{
+    if (!IsValid(SourceActor)
+        || !IsValid(DifficultyComponent)
+        || !DifficultyComponent->ShouldPersistHuntAfterConfirmedTarget()
+        || !IsValid(AwarenessComponent))
+    {
+        return;
+    }
+
+    const FBDFRAwarenessSnapshot Snapshot = AwarenessComponent->GetSnapshot();
+
+    if (Snapshot.bHasConfirmedTarget
+        && AwarenessComponent->GetCurrentTarget() == SourceActor)
+    {
+        bPersistentHuntActive = true;
+        PersistentHuntTarget = SourceActor;
+    }
 }
 
 void ABDFRAIController::ApplyDifficultyToPerception()
