@@ -78,6 +78,9 @@ BDFR Interactive AI разрабатывается как независимый
 - [x] Независимые Footprint и Scent trail
 - [x] Слежение по запаху для собак
 - [x] Canine AI Controller с повышенной чувствительностью слуха
+- [x] Направленное движение ушей и головы к источнику звука
+- [x] Режим наблюдения за окружением
+- [x] Animation hooks для Engage и Bark
 - [ ] Синхронизация Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -110,6 +113,7 @@ BDFR_InteractiveAI
 - `docs/DIFFICULTY_SYSTEM.md`
 - `docs/INDIRECT_VISUAL_PERCEPTION.md`
 - `docs/TRACKING_CANINE_AI.md`
+- `docs/CANINE_ATTENTION_ANIMATION.md`
 
 ## Первая интеграция
 
