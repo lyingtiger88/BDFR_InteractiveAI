@@ -65,4 +65,13 @@ struct BDFR_INTERACTIVEAI_API FBDFRDifficultyProfile
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Indirect Visual", meta = (ClampMin = "0.1"))
     float IndirectVisualAwarenessMultiplier = 1.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Tracking")
+    bool bCanTrackFootprints = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Tracking", meta = (ClampMin = "0.1"))
+    float FootprintTrackingSensitivity = 1.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Tracking", meta = (ClampMin = "1.0"))
+    float MaxFootprintAgeSeconds = 60.0f;
 };
