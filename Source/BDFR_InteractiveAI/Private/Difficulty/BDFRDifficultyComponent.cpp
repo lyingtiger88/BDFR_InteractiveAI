@@ -7,14 +7,25 @@ UBDFRDifficultyComponent::UBDFRDifficultyComponent()
     PrimaryComponentTick.bCanEverTick = false;
 }
 
+void UBDFRDifficultyComponent::BeginPlay()
+{
+    Super::BeginPlay();
+
+    if (bUseProjectDefaultDifficulty)
+    {
+        DifficultyTier = GetDefault<UBDFRAISettings>()->DefaultDifficultyTier;
+    }
+}
+
 void UBDFRDifficultyComponent::SetDifficultyTier(const EBDFRDifficultyTier NewTier)
 {
-    if (DifficultyTier == NewTier)
+    if (DifficultyTier == NewTier && !bUseProjectDefaultDifficulty)
     {
         return;
     }
 
     const EBDFRDifficultyTier PreviousTier = DifficultyTier;
+    bUseProjectDefaultDifficulty = false;
     DifficultyTier = NewTier;
     OnDifficultyChanged.Broadcast(PreviousTier, DifficultyTier);
 }
