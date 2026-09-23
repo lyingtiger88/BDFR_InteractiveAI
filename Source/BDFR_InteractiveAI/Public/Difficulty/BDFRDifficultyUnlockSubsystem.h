@@ -36,7 +36,7 @@ public:
     FBDFROnDifficultyUnlocked OnDifficultyUnlocked;
 
 private:
-    static constexpr const TCHAR* SaveSlotName = TEXT("BDFR_DifficultyUnlocks");
+    static FString GetSaveSlotName();
     static constexpr int32 SaveUserIndex = 0;
 
     bool bSASUnlocked = false;
