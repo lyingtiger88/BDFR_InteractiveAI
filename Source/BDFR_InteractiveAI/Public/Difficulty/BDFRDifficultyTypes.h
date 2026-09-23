@@ -56,4 +56,13 @@ struct BDFR_INTERACTIVEAI_API FBDFRDifficultyProfile
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty")
     bool bPersistentHuntAfterConfirmedTarget = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Indirect Visual")
+    bool bCanDetectShadows = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Indirect Visual")
+    bool bCanDetectReflections = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty|Indirect Visual", meta = (ClampMin = "0.1"))
+    float IndirectVisualAwarenessMultiplier = 1.0f;
 };
