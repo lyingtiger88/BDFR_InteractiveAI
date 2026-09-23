@@ -368,6 +368,9 @@ void ABDFRAIController::HandleAcousticStimulus(AActor* SourceActor, const FAISti
     LastHeardAcousticLocation = Stimulus.StimulusLocation;
     LastHeardAcousticTag = Stimulus.Tag;
     LastHeardAcousticStrength = EffectiveStrength;
+    LastHeardAcousticTimeSeconds = GetWorld() != nullptr
+        ? GetWorld()->GetTimeSeconds()
+        : 0.0f;
 
     const FString AcousticTag = Stimulus.Tag.ToString();
 
