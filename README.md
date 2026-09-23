@@ -14,6 +14,7 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - health / injury / bleeding,
 - distress calls and nearby psychological stress,
 - ally assessment and assistance requests,
+- gunshot / explosion acoustic events and temporary hearing impairment,
 - contextual interaction,
 - Behavior Tree / Blackboard integration,
 - EQS-based tactical queries,
@@ -48,6 +49,10 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - [x] Nearby AI stress response
 - [x] Pending ally assistance target/urgency
 - [x] Assistance interface
+- [x] Gunshot and explosion acoustic events
+- [x] Cumulative ringing / impaired / deafened hearing states
+- [x] Temporary AI Hearing disable/recovery
+- [x] Distance-delayed blast exposure
 - [ ] Gameplay tags
 - [ ] Blackboard sync
 - [ ] Behavior Tree tasks/services
@@ -72,7 +77,7 @@ BDFR_InteractiveAI
 └── Interfaces
 ```
 
-See `docs/ARCHITECTURE.md` and `docs/HEALTH_DISTRESS_SOCIAL.md`.
+See `docs/ARCHITECTURE.md`, `docs/HEALTH_DISTRESS_SOCIAL.md`, and `docs/ACOUSTIC_HEARING.md`.
 
 ## Initial integration target
 
