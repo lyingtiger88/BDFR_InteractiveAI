@@ -87,7 +87,8 @@ void UBDFRIndirectVisualPerceptionComponent::ScanForIndirectVisualCues()
             continue;
         }
 
-        const float* LastCueTime = LastCueTimeBySource.Find(SourceActor);
+        const TWeakObjectPtr<AActor> SourceKey(SourceActor);
+        const float* LastCueTime = LastCueTimeBySource.Find(SourceKey);
         if (LastCueTime && Now - *LastCueTime < PerSourceCueCooldownSeconds)
         {
             continue;
@@ -172,7 +173,7 @@ void UBDFRIndirectVisualPerceptionComponent::ScanForIndirectVisualCues()
 
         if (bDetectedAnyCue)
         {
-            LastCueTimeBySource.Add(SourceActor, Now);
+            LastCueTimeBySource.Add(SourceKey, Now);
         }
     }
 }
@@ -195,6 +196,10 @@ bool UBDFRIndirectVisualPerceptionComponent::IsSourceDirectlyVisible(
     const FVector TargetLocation = SourceActor->GetActorLocation();
     FCollisionQueryParams Params(SCENE_QUERY_STAT(BDFRIndirectDirectLOS), false);
     Params.AddIgnoredActor(GetOwner());
+    if (const AAIController* Controller = Cast<AAIController>(GetOwner()))
+    {
+        Params.AddIgnoredActor(Controller->GetPawn());
+    }
 
     FHitResult Hit;
     const bool bHit = World->LineTraceSingleByChannel(
@@ -220,6 +225,10 @@ bool UBDFRIndirectVisualPerceptionComponent::IsPointVisible(
 
     FCollisionQueryParams Params(SCENE_QUERY_STAT(BDFRIndirectCueLOS), false);
     Params.AddIgnoredActor(GetOwner());
+    if (const AAIController* Controller = Cast<AAIController>(GetOwner()))
+    {
+        Params.AddIgnoredActor(Controller->GetPawn());
+    }
     if (IsValid(IgnoreActor))
     {
         Params.AddIgnoredActor(IgnoreActor);
