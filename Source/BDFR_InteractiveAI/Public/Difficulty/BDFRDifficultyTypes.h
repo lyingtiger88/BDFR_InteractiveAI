@@ -9,7 +9,8 @@ enum class EBDFRDifficultyTier : uint8
     Recruit  UMETA(DisplayName = "Recruit"),
     Private  UMETA(DisplayName = "Private"),
     Sergeant UMETA(DisplayName = "Sergeant"),
-    Commando UMETA(DisplayName = "Commando")
+    Commando UMETA(DisplayName = "Commando"),
+    SAS      UMETA(DisplayName = "SAS")
 };
 
 USTRUCT(BlueprintType)
@@ -52,4 +53,7 @@ struct BDFR_INTERACTIVEAI_API FBDFRDifficultyProfile
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty", meta = (ClampMin = "0.1"))
     float CoverDecisionMultiplier = 1.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BDFR|Difficulty")
+    bool bPersistentHuntAfterConfirmedTarget = false;
 };
