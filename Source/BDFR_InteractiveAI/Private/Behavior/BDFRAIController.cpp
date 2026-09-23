@@ -5,6 +5,7 @@
 #include "Core/BDFRAISettings.h"
 #include "Difficulty/BDFRDifficultyComponent.h"
 #include "GameFramework/Pawn.h"
+#include "IndirectVisual/BDFRIndirectVisualPerceptionComponent.h"
 #include "Social/BDFRStressComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense.h"
@@ -20,6 +21,8 @@ ABDFRAIController::ABDFRAIController()
     AwarenessComponent = CreateDefaultSubobject<UBDFRAwarenessComponent>(TEXT("BDFRAwareness"));
     StressComponent = CreateDefaultSubobject<UBDFRStressComponent>(TEXT("BDFRStress"));
     DifficultyComponent = CreateDefaultSubobject<UBDFRDifficultyComponent>(TEXT("BDFRDifficulty"));
+    IndirectVisualPerceptionComponent =
+        CreateDefaultSubobject<UBDFRIndirectVisualPerceptionComponent>(TEXT("BDFRIndirectVisual"));
 
     BDFRPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("BDFRPerception"));
     SetPerceptionComponent(*BDFRPerceptionComponent);
