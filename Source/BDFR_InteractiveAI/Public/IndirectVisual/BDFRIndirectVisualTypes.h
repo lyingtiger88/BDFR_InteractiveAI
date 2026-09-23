@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "BDFRIndirectVisualTypes.generated.h"
 
+class AActor;
+
 UENUM(BlueprintType)
 enum class EBDFRIndirectVisualCueType : uint8
 {
