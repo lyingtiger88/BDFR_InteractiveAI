@@ -10,6 +10,15 @@ class BDFR_INTERACTIVEAI_API UBDFRAISettings : public UDeveloperSettings
     GENERATED_BODY()
 
 public:
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Optional Systems")
+    bool bEnableCaptivitySystem = true;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Optional Systems")
+    bool bEnableInterrogationSystem = true;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Optional Systems")
+    bool bEnableCoerciveInterrogation = false;
+
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Awareness", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float SuspiciousThreshold = 0.25f;
 
