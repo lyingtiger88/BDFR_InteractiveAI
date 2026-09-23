@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "BDFRTrackingTypes.generated.h"
 
+class AActor;
+
 UENUM(BlueprintType)
 enum class EBDFRTrackType : uint8
 {
