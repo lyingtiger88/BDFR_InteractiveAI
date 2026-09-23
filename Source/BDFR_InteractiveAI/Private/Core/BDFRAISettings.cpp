@@ -18,6 +18,9 @@ UBDFRAISettings::UBDFRAISettings()
     RecruitDifficulty.bCanDetectShadows = false;
     RecruitDifficulty.bCanDetectReflections = false;
     RecruitDifficulty.IndirectVisualAwarenessMultiplier = 0.50f;
+    RecruitDifficulty.bCanTrackFootprints = false;
+    RecruitDifficulty.FootprintTrackingSensitivity = 0.50f;
+    RecruitDifficulty.MaxFootprintAgeSeconds = 20.0f;
 
     PrivateDifficulty.Tier = EBDFRDifficultyTier::Private;
     PrivateDifficulty.SightRadiusMultiplier = 1.00f;
@@ -35,6 +38,9 @@ UBDFRAISettings::UBDFRAISettings()
     PrivateDifficulty.bCanDetectShadows = false;
     PrivateDifficulty.bCanDetectReflections = false;
     PrivateDifficulty.IndirectVisualAwarenessMultiplier = 0.75f;
+    PrivateDifficulty.bCanTrackFootprints = false;
+    PrivateDifficulty.FootprintTrackingSensitivity = 0.75f;
+    PrivateDifficulty.MaxFootprintAgeSeconds = 35.0f;
 
     SergeantDifficulty.Tier = EBDFRDifficultyTier::Sergeant;
     SergeantDifficulty.SightRadiusMultiplier = 1.15f;
@@ -52,6 +58,9 @@ UBDFRAISettings::UBDFRAISettings()
     SergeantDifficulty.bCanDetectShadows = false;
     SergeantDifficulty.bCanDetectReflections = false;
     SergeantDifficulty.IndirectVisualAwarenessMultiplier = 0.90f;
+    SergeantDifficulty.bCanTrackFootprints = true;
+    SergeantDifficulty.FootprintTrackingSensitivity = 1.00f;
+    SergeantDifficulty.MaxFootprintAgeSeconds = 75.0f;
 
     CommandoDifficulty.Tier = EBDFRDifficultyTier::Commando;
     CommandoDifficulty.SightRadiusMultiplier = 1.30f;
@@ -69,6 +78,9 @@ UBDFRAISettings::UBDFRAISettings()
     CommandoDifficulty.bCanDetectShadows = true;
     CommandoDifficulty.bCanDetectReflections = true;
     CommandoDifficulty.IndirectVisualAwarenessMultiplier = 1.00f;
+    CommandoDifficulty.bCanTrackFootprints = true;
+    CommandoDifficulty.FootprintTrackingSensitivity = 1.30f;
+    CommandoDifficulty.MaxFootprintAgeSeconds = 120.0f;
 
     SASDifficulty.Tier = EBDFRDifficultyTier::SAS;
     SASDifficulty.SightRadiusMultiplier = 1.45f;
@@ -86,4 +98,7 @@ UBDFRAISettings::UBDFRAISettings()
     SASDifficulty.bCanDetectShadows = true;
     SASDifficulty.bCanDetectReflections = true;
     SASDifficulty.IndirectVisualAwarenessMultiplier = 1.45f;
+    SASDifficulty.bCanTrackFootprints = true;
+    SASDifficulty.FootprintTrackingSensitivity = 1.60f;
+    SASDifficulty.MaxFootprintAgeSeconds = 180.0f;
 }
