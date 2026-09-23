@@ -24,10 +24,19 @@ public:
     void SetDifficultyTier(EBDFRDifficultyTier NewTier);
 
     UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
+    bool CanSelectDifficultyTier(EBDFRDifficultyTier Tier) const;
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
     EBDFRDifficultyTier GetDifficultyTier() const { return DifficultyTier; }
 
     UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
     FBDFRDifficultyProfile GetDifficultyProfile() const;
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
+    bool ShouldPersistHuntAfterConfirmedTarget() const
+    {
+        return GetDifficultyProfile().bPersistentHuntAfterConfirmedTarget;
+    }
 
     UFUNCTION(BlueprintPure, Category = "BDFR|Difficulty")
     float GetStressGainMultiplier() const;
