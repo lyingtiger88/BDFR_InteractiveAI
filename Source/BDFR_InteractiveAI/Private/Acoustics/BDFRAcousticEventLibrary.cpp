@@ -127,7 +127,7 @@ void UBDFRAcousticEventLibrary::ApplyRadialExposure(
         return;
     }
 
-    TSet<TObjectPtr<AActor>> ProcessedActors;
+    TSet<AActor*> ProcessedActors;
 
     for (const FOverlapResult& Result : Overlaps)
     {
