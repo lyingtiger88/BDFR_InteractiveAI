@@ -14,6 +14,7 @@ UBDFRAISettings::UBDFRAISettings()
     RecruitDifficulty.AcousticRecoveryMultiplier = 0.80f;
     RecruitDifficulty.CombatAccuracyMultiplier = 0.70f;
     RecruitDifficulty.CoverDecisionMultiplier = 0.70f;
+    RecruitDifficulty.bPersistentHuntAfterConfirmedTarget = false;
 
     PrivateDifficulty.Tier = EBDFRDifficultyTier::Private;
     PrivateDifficulty.SightRadiusMultiplier = 1.00f;
@@ -27,6 +28,7 @@ UBDFRAISettings::UBDFRAISettings()
     PrivateDifficulty.AcousticRecoveryMultiplier = 1.00f;
     PrivateDifficulty.CombatAccuracyMultiplier = 1.00f;
     PrivateDifficulty.CoverDecisionMultiplier = 1.00f;
+    PrivateDifficulty.bPersistentHuntAfterConfirmedTarget = false;
 
     SergeantDifficulty.Tier = EBDFRDifficultyTier::Sergeant;
     SergeantDifficulty.SightRadiusMultiplier = 1.15f;
@@ -40,6 +42,7 @@ UBDFRAISettings::UBDFRAISettings()
     SergeantDifficulty.AcousticRecoveryMultiplier = 1.20f;
     SergeantDifficulty.CombatAccuracyMultiplier = 1.18f;
     SergeantDifficulty.CoverDecisionMultiplier = 1.20f;
+    SergeantDifficulty.bPersistentHuntAfterConfirmedTarget = false;
 
     CommandoDifficulty.Tier = EBDFRDifficultyTier::Commando;
     CommandoDifficulty.SightRadiusMultiplier = 1.30f;
@@ -53,4 +56,19 @@ UBDFRAISettings::UBDFRAISettings()
     CommandoDifficulty.AcousticRecoveryMultiplier = 1.40f;
     CommandoDifficulty.CombatAccuracyMultiplier = 1.32f;
     CommandoDifficulty.CoverDecisionMultiplier = 1.35f;
+    CommandoDifficulty.bPersistentHuntAfterConfirmedTarget = false;
+
+    SASDifficulty.Tier = EBDFRDifficultyTier::SAS;
+    SASDifficulty.SightRadiusMultiplier = 1.45f;
+    SASDifficulty.HearingSensitivityMultiplier = 1.35f;
+    SASDifficulty.AwarenessGainMultiplier = 1.65f;
+    SASDifficulty.ReactionDelaySeconds = 0.08f;
+    SASDifficulty.SearchPersistenceSeconds = 120.0f;
+    SASDifficulty.StressResistance = 0.97f;
+    SASDifficulty.AssistanceBravery = 0.95f;
+    SASDifficulty.SurrenderResistance = 1.00f;
+    SASDifficulty.AcousticRecoveryMultiplier = 1.60f;
+    SASDifficulty.CombatAccuracyMultiplier = 1.45f;
+    SASDifficulty.CoverDecisionMultiplier = 1.50f;
+    SASDifficulty.bPersistentHuntAfterConfirmedTarget = true;
 }
