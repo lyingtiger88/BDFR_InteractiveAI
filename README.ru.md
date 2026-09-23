@@ -23,6 +23,7 @@ BDFR Interactive AI разрабатывается как независимый
 - оценку состояния союзников и оказание помощи,
 - звуки выстрелов и взрывов и временное ухудшение слуха,
 - опциональные системы плена, заложников и допроса,
+- военные игровые профили сложности и скрытый режим `SAS` с Persistent Hunt,
 - контекстные взаимодействия,
 - интеграцию с `Behavior Tree` и `Blackboard`,
 - тактические запросы через `EQS`,
@@ -66,6 +67,9 @@ BDFR Interactive AI разрабатывается как независимый
 - [x] Модель False Statement и Information Reliability
 - [x] Captivity Presentation Interface
 - [x] Gameplay Tags
+- [x] Профили Recruit / Private / Sergeant / Commando
+- [x] Постоянная разблокировка скрытого SAS после прохождения на Commando
+- [x] Persistent Hunt в SAS после подтверждённого обнаружения игрока
 - [ ] Синхронизация Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -95,6 +99,7 @@ BDFR_InteractiveAI
 - `docs/HEALTH_DISTRESS_SOCIAL.md`
 - `docs/ACOUSTIC_HEARING.md`
 - `docs/CAPTIVITY_INTERROGATION.md`
+- `docs/DIFFICULTY_SYSTEM.md`
 
 ## Первая интеграция
 
