@@ -42,12 +42,15 @@ void UBDFRDistressComponent::EmitDistress(
     const float ClampedUrgency = FMath::Clamp(Urgency, 0.0f, 1.0f);
     const float Radius = RadiusOverride > 0.0f ? RadiusOverride : GetDefaultRadius(DistressType);
 
+    const float Loudness = FMath::Max(0.1f, ClampedUrgency);
+    const float CompensatedMaxRange = Radius > 0.0f ? Radius / Loudness : 0.0f;
+
     UAISense_Hearing::ReportNoiseEvent(
         Owner,
         Owner->GetActorLocation(),
-        FMath::Max(0.1f, ClampedUrgency),
+        Loudness,
         Owner,
-        Radius,
+        CompensatedMaxRange,
         GetNoiseTag(DistressType));
 
     OnDistressEmitted.Broadcast(DistressType, ClampedUrgency, Radius);
