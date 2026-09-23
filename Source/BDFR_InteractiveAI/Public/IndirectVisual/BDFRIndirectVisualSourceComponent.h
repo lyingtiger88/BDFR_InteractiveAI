@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "BDFRIndirectVisualSourceComponent.generated.h"
 
+class ADirectionalLight;
+
 UCLASS(ClassGroup = (BDFR), meta = (BlueprintSpawnableComponent))
 class BDFR_INTERACTIVEAI_API UBDFRIndirectVisualSourceComponent : public UActorComponent
 {
@@ -14,6 +16,7 @@ public:
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     UFUNCTION(BlueprintCallable, Category = "BDFR|Indirect Visual|Shadow")
     void SetShadowCue(FVector InShadowLocation, float InStrength = 1.0f);
@@ -48,6 +51,15 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Indirect Visual|Shadow", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float BaseShadowStrength = 0.75f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Indirect Visual|Shadow|Auto")
+    bool bAutoEstimateShadowFromDirectionalLight = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Indirect Visual|Shadow|Auto", meta = (ClampMin = "0.05"))
+    float AutoShadowUpdateInterval = 0.15f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BDFR|Indirect Visual|Shadow|Auto", meta = (ClampMin = "100.0"))
+    float AutoShadowTraceDistance = 5000.0f;
+
 private:
     UPROPERTY(Transient)
     bool bShadowCueValid = false;
@@ -57,4 +69,12 @@ private:
 
     UPROPERTY(Transient)
     float ShadowCueStrength = 0.0f;
+
+    UPROPERTY(Transient)
+    TObjectPtr<ADirectionalLight> CachedDirectionalLight;
+
+    float AutoShadowAccumulatedTime = 0.0f;
+
+    ADirectionalLight* FindDominantDirectionalLight() const;
+    void UpdateAutomaticShadowCue();
 };
