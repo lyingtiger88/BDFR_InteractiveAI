@@ -78,6 +78,9 @@ BDFR Interactive AI به‌عنوان یک پلاگین مستقل از پروژ
 - [x] تولید Trail مستقل برای Footprint و Scent
 - [x] ردیابی بو برای سگ
 - [x] AI Controller سگ با حساسیت شنیداری بالاتر
+- [x] جهت‌گیری گوش و سر سگ به سمت صدا
+- [x] حالت توجه و اسکن محیط برای سگ
+- [x] Hookهای انیمیشن Engage و Bark برای سگ
 - [ ] همگام‌سازی Blackboard
 - [ ] Behavior Tree Tasks / Services
 - [ ] Patrol Route
@@ -110,6 +113,7 @@ BDFR_InteractiveAI
 - `docs/DIFFICULTY_SYSTEM.md`
 - `docs/INDIRECT_VISUAL_PERCEPTION.md`
 - `docs/TRACKING_CANINE_AI.md`
+- `docs/CANINE_ATTENTION_ANIMATION.md`
 
 ## هدف اولیه برای یکپارچه‌سازی
 
