@@ -24,6 +24,7 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - gunshot / explosion acoustic events and temporary hearing impairment,
 - optional captivity / hostage / interrogation systems,
 - military-themed difficulty profiles with an unlockable hidden SAS persistent-hunt mode,
+- Commando/SAS indirect visual perception through shadows and reflective surfaces,
 - contextual interaction,
 - Behavior Tree / Blackboard integration,
 - EQS-based tactical queries,
@@ -70,6 +71,8 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - [x] Recruit / Private / Sergeant / Commando difficulty profiles
 - [x] Hidden SAS difficulty unlock persistence
 - [x] SAS persistent-hunt state after confirmed player detection
+- [x] Commando/SAS shadow cue detection
+- [x] Commando/SAS mirror / calm-water / polished-metal reflection detection
 - [ ] Blackboard sync
 - [ ] Behavior Tree tasks/services
 - [ ] Patrol route
@@ -93,7 +96,7 @@ BDFR_InteractiveAI
 └── Interfaces
 ```
 
-See `docs/ARCHITECTURE.md`, `docs/HEALTH_DISTRESS_SOCIAL.md`, `docs/ACOUSTIC_HEARING.md`, `docs/CAPTIVITY_INTERROGATION.md`, and `docs/DIFFICULTY_SYSTEM.md`.
+See `docs/ARCHITECTURE.md`, `docs/HEALTH_DISTRESS_SOCIAL.md`, `docs/ACOUSTIC_HEARING.md`, `docs/CAPTIVITY_INTERROGATION.md`, `docs/DIFFICULTY_SYSTEM.md`, and `docs/INDIRECT_VISUAL_PERCEPTION.md`.
 
 ## Initial integration target
 
