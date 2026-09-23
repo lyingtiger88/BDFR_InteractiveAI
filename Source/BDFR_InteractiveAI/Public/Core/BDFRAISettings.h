@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Difficulty/BDFRDifficultyTypes.h"
 #include "Engine/DeveloperSettings.h"
 #include "BDFRAISettings.generated.h"
 
@@ -10,6 +11,8 @@ class BDFR_INTERACTIVEAI_API UBDFRAISettings : public UDeveloperSettings
     GENERATED_BODY()
 
 public:
+    UBDFRAISettings();
+
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Optional Systems")
     bool bEnableCaptivitySystem = true;
 
@@ -18,6 +21,21 @@ public:
 
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Optional Systems")
     bool bEnableCoerciveInterrogation = false;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Difficulty")
+    EBDFRDifficultyTier DefaultDifficultyTier = EBDFRDifficultyTier::Private;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Difficulty|Profiles")
+    FBDFRDifficultyProfile RecruitDifficulty;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Difficulty|Profiles")
+    FBDFRDifficultyProfile PrivateDifficulty;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Difficulty|Profiles")
+    FBDFRDifficultyProfile SergeantDifficulty;
+
+    UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Difficulty|Profiles")
+    FBDFRDifficultyProfile CommandoDifficulty;
 
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Awareness", meta = (ClampMin = "0.0", ClampMax = "1.0"))
     float SuspiciousThreshold = 0.25f;
