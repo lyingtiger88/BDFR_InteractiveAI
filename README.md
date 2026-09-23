@@ -18,18 +18,43 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 
 ## Design principles
 
-- **No direct ALS dependency.** ALS, Motion Matching, Lyra, or custom locomotion should connect through interfaces/adapters.
+- **No direct ALS dependency.** ALS, Motion Matching, Lyra, or custom locomotion connect through interfaces/adapters.
 - **Project-independent core.** Game-specific weapon, mission, animation, and character code stays outside the plugin.
 - **Component-driven behavior.** Perception, awareness, cover, and interaction are isolated systems.
-- **Data-driven tuning.** Gameplay tags and settings are preferred over hard-coded project assumptions.
-- **Blueprint-friendly C++.** Core systems live in C++ and expose clean Blueprint extension points.
+- **Data-driven tuning.** Settings and tags are preferred over hard-coded project assumptions.
+- **Blueprint-friendly C++.** Core systems live in C++ and expose Blueprint extension points.
 
-## Planned architecture
+## Current foundation
+
+- [x] Unreal plugin/module skeleton
+- [x] Core AI state model
+- [x] Awareness level model
+- [x] Developer settings
+- [x] Generic locomotion interface
+- [x] Generic combat interface
+- [x] Generic interaction interface
+- [x] Base AI Controller
+- [x] AI Perception: sight
+- [x] AI Perception: hearing
+- [x] AI Perception: damage
+- [x] Awareness accumulation / decay
+- [x] Last known target location
+- [x] Confirmed threat memory
+- [ ] Gameplay tags
+- [ ] Blackboard sync
+- [ ] Behavior Tree tasks/services
+- [ ] Patrol route
+- [ ] Investigation/search
+- [ ] Cover/EQS
+- [ ] Smart Object integration
+- [ ] Squad knowledge
+
+## Architecture
 
 ```text
 BDFR_InteractiveAI
 ├── Core
-├── Perception
+├── Perception (via base AIController)
 ├── Awareness
 ├── Patrol
 ├── Search
@@ -39,60 +64,21 @@ BDFR_InteractiveAI
 └── Interfaces
 ```
 
+See `docs/ARCHITECTURE.md`.
+
 ## Initial integration target
 
 The first integration target is `ProjectIGI_Remake`, running Unreal Engine 5.8 with ALS Refactored.
 
-The plugin itself must remain independent from ALS. ProjectIGI will provide a thin locomotion adapter that translates BDFR requests into ALS gait, stance, aiming, and rotation/look behavior.
+The plugin itself remains independent from ALS. ProjectIGI supplies the adapter translating BDFR requests into ALS gait, stance, aiming, and look behavior.
 
-## Development roadmap
+See `docs/PROJECT_IGI_INTEGRATION.md`.
 
-### Phase 1 — Foundation
-- [x] Plugin/module skeleton
-- [x] Core AI state types
-- [x] Locomotion interface
-- [x] Combat interface
-- [x] Interaction interface
-- [ ] Developer settings
-- [ ] Gameplay tags
+## Status
 
-### Phase 2 — Perception & awareness
-- [ ] AI Perception component
-- [ ] Sight
-- [ ] Hearing
-- [ ] Damage awareness
-- [ ] Threat memory
-- [ ] Suspicion / alert model
+Version: **0.1.0 / foundation**
 
-### Phase 3 — Patrol & observation
-- [ ] Patrol route
-- [ ] Patrol points
-- [ ] Observation points
-- [ ] Wait / scan behavior
-
-### Phase 4 — Investigation & search
-- [ ] Last known position
-- [ ] Investigation locations
-- [ ] Search patterns
-- [ ] Lost target memory
-
-### Phase 5 — Cover
-- [ ] Cover candidates
-- [ ] EQS cover query
-- [ ] Occupancy/reservation
-- [ ] Enter / leave / re-evaluate cover
-- [ ] Peek hooks
-
-### Phase 6 — Interaction
-- [ ] Generic interactable interface
-- [ ] Contextual interaction tasks
-- [ ] Smart Object integration
-
-### Phase 7 — Tactical coordination
-- [ ] Shared alerts
-- [ ] Squad knowledge
-- [ ] Roles
-- [ ] Flanking / suppression hooks
+The next implementation block is Blackboard synchronization plus Patrol/Observation.
 
 ## License
 
