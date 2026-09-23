@@ -15,7 +15,11 @@ void UBDFRIndirectVisualWorldSubsystem::RegisterSource(
 void UBDFRIndirectVisualWorldSubsystem::UnregisterSource(
     UBDFRIndirectVisualSourceComponent* Source)
 {
-    Sources.Remove(Source);
+    Sources.RemoveAll(
+        [Source](const TWeakObjectPtr<UBDFRIndirectVisualSourceComponent>& Entry)
+        {
+            return !Entry.IsValid() || Entry.Get() == Source;
+        });
 }
 
 void UBDFRIndirectVisualWorldSubsystem::RegisterReflectiveSurface(
@@ -30,5 +34,9 @@ void UBDFRIndirectVisualWorldSubsystem::RegisterReflectiveSurface(
 void UBDFRIndirectVisualWorldSubsystem::UnregisterReflectiveSurface(
     UBDFRReflectiveSurfaceComponent* Surface)
 {
-    ReflectiveSurfaces.Remove(Surface);
+    ReflectiveSurfaces.RemoveAll(
+        [Surface](const TWeakObjectPtr<UBDFRReflectiveSurfaceComponent>& Entry)
+        {
+            return !Entry.IsValid() || Entry.Get() == Surface;
+        });
 }
