@@ -78,6 +78,9 @@ BDFR Interactive AI is designed as a project-independent Unreal Engine plugin fo
 - [x] Reusable footprint + scent trail emitter
 - [x] Canine scent-tracking component
 - [x] Canine AI controller with enhanced hearing
+- [x] Directional canine ear/head attention to sound
+- [x] Canine environmental scanning state
+- [x] Canine engage/bark animation presentation hooks
 - [ ] Blackboard sync
 - [ ] Behavior Tree tasks/services
 - [ ] Patrol route
@@ -101,7 +104,7 @@ BDFR_InteractiveAI
 └── Interfaces
 ```
 
-See `docs/ARCHITECTURE.md`, `docs/HEALTH_DISTRESS_SOCIAL.md`, `docs/ACOUSTIC_HEARING.md`, `docs/CAPTIVITY_INTERROGATION.md`, `docs/DIFFICULTY_SYSTEM.md`, `docs/INDIRECT_VISUAL_PERCEPTION.md`, and `docs/TRACKING_CANINE_AI.md`.
+See `docs/ARCHITECTURE.md`, `docs/HEALTH_DISTRESS_SOCIAL.md`, `docs/ACOUSTIC_HEARING.md`, `docs/CAPTIVITY_INTERROGATION.md`, `docs/DIFFICULTY_SYSTEM.md`, `docs/INDIRECT_VISUAL_PERCEPTION.md`, `docs/TRACKING_CANINE_AI.md`, and `docs/CANINE_ATTENTION_ANIMATION.md`.
 
 ## Initial integration target
 
