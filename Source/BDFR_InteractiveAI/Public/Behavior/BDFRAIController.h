@@ -75,6 +75,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "BDFR|Acoustics")
     float GetLastHeardAcousticStrength() const { return LastHeardAcousticStrength; }
 
+    UFUNCTION(BlueprintPure, Category = "BDFR|Acoustics")
+    float GetLastHeardAcousticTimeSeconds() const { return LastHeardAcousticTimeSeconds; }
+
     UFUNCTION(BlueprintPure, Category = "BDFR|Assistance")
     AActor* GetPendingAssistanceTarget() const { return PendingAssistanceTarget; }
 
@@ -170,6 +173,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Acoustics")
     float LastHeardAcousticStrength = 0.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Acoustics")
+    float LastHeardAcousticTimeSeconds = -1000.0f;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Difficulty|Persistent Hunt")
     bool bPersistentHuntActive = false;
