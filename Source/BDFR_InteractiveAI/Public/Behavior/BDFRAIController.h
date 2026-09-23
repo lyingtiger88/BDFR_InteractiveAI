@@ -6,10 +6,18 @@
 #include "BDFRAIController.generated.h"
 
 class UBDFRAwarenessComponent;
+class UBDFRStressComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Damage;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Sight;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
+    FBDFROnDistressPerceived,
+    AActor*, SourceActor,
+    FName, DistressTag,
+    FVector, Location,
+    float, Urgency);
 
 UCLASS(Blueprintable)
 class BDFR_INTERACTIVEAI_API ABDFRAIController : public AAIController
@@ -23,7 +31,25 @@ public:
     UBDFRAwarenessComponent* GetAwarenessComponent() const { return AwarenessComponent; }
 
     UFUNCTION(BlueprintPure, Category = "BDFR|AI")
+    UBDFRStressComponent* GetStressComponent() const { return StressComponent; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|AI")
     UAIPerceptionComponent* GetBDFRPerceptionComponent() const { return BDFRPerceptionComponent; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Assistance")
+    AActor* GetPendingAssistanceTarget() const { return PendingAssistanceTarget; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Assistance")
+    FVector GetPendingAssistanceLocation() const { return PendingAssistanceLocation; }
+
+    UFUNCTION(BlueprintPure, Category = "BDFR|Assistance")
+    float GetPendingAssistanceUrgency() const { return PendingAssistanceUrgency; }
+
+    UFUNCTION(BlueprintCallable, Category = "BDFR|Assistance")
+    void ClearPendingAssistance();
+
+    UPROPERTY(BlueprintAssignable, Category = "BDFR|Social")
+    FBDFROnDistressPerceived OnDistressPerceived;
 
 protected:
     virtual void BeginPlay() override;
@@ -36,8 +62,16 @@ protected:
 
     virtual bool BDFR_ShouldProcessPerceivedActor_Implementation(AActor* SourceActor) const;
 
+    UFUNCTION(BlueprintNativeEvent, Category = "BDFR|Social")
+    bool BDFR_ShouldRespondToDistress(AActor* SourceActor) const;
+
+    virtual bool BDFR_ShouldRespondToDistress_Implementation(AActor* SourceActor) const;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|AI")
     TObjectPtr<UBDFRAwarenessComponent> AwarenessComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Social")
+    TObjectPtr<UBDFRStressComponent> StressComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|AI")
     TObjectPtr<UAIPerceptionComponent> BDFRPerceptionComponent;
@@ -50,4 +84,18 @@ protected:
 
     UPROPERTY()
     TObjectPtr<UAISenseConfig_Damage> DamageConfig;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Assistance")
+    TObjectPtr<AActor> PendingAssistanceTarget;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Assistance")
+    FVector PendingAssistanceLocation = FVector::ZeroVector;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BDFR|Assistance")
+    float PendingAssistanceUrgency = 0.0f;
+
+private:
+    bool IsDistressStimulus(const FAIStimulus& Stimulus) const;
+    void HandleDistressStimulus(AActor* SourceActor, const FAIStimulus& Stimulus);
+    static float GetDistressStressAmount(FName DistressTag, float Urgency);
 };
