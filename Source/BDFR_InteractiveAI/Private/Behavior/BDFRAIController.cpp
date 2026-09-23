@@ -7,6 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "IndirectVisual/BDFRIndirectVisualPerceptionComponent.h"
 #include "Social/BDFRStressComponent.h"
+#include "Tracking/BDFRFootprintTrackingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense.h"
 #include "Perception/AISense_Damage.h"
@@ -23,6 +24,8 @@ ABDFRAIController::ABDFRAIController()
     DifficultyComponent = CreateDefaultSubobject<UBDFRDifficultyComponent>(TEXT("BDFRDifficulty"));
     IndirectVisualPerceptionComponent =
         CreateDefaultSubobject<UBDFRIndirectVisualPerceptionComponent>(TEXT("BDFRIndirectVisual"));
+    FootprintTrackingComponent =
+        CreateDefaultSubobject<UBDFRFootprintTrackingComponent>(TEXT("BDFRFootprintTracking"));
 
     BDFRPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("BDFRPerception"));
     SetPerceptionComponent(*BDFRPerceptionComponent);
@@ -254,7 +257,10 @@ void ABDFRAIController::ApplyDifficultyToPerception()
 
     if (IsValid(HearingConfig))
     {
-        HearingConfig->HearingRange = Settings->DefaultHearingRange * Profile.HearingSensitivityMultiplier;
+        HearingConfig->HearingRange =
+            Settings->DefaultHearingRange
+            * Profile.HearingSensitivityMultiplier
+            * BDFR_GetSpeciesHearingMultiplier();
         BDFRPerceptionComponent->ConfigureSense(*HearingConfig);
     }
 
@@ -272,7 +278,12 @@ float ABDFRAIController::GetCurrentHearingSensitivity() const
         ? DifficultyComponent->GetDifficultyProfile().HearingSensitivityMultiplier
         : 1.0f;
 
-    return FMath::Clamp(ExposureSensitivity * DifficultySensitivity, 0.0f, 2.0f);
+    return FMath::Clamp(
+        ExposureSensitivity
+        * DifficultySensitivity
+        * BDFR_GetSpeciesHearingMultiplier(),
+        0.0f,
+        3.0f);
 }
 
 float ABDFRAIController::GetAwarenessGainMultiplier() const
